@@ -8,24 +8,44 @@
 
 export interface Config {
   auth: {
-    users: UserAuthOperations;
+    usuarios: UsuarioAuthOperations;
   };
   collections: {
-    users: User;
-    media: Media;
+    usuarios: Usuario;
+    medidores: Medidore;
+    consumos: Consumo;
+    'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
+  };
+  collectionsJoins: {};
+  collectionsSelect: {
+    usuarios: UsuariosSelect<false> | UsuariosSelect<true>;
+    medidores: MedidoresSelect<false> | MedidoresSelect<true>;
+    consumos: ConsumosSelect<false> | ConsumosSelect<true>;
+    'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
+    'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
+    'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
   };
   db: {
     defaultIDType: string;
   };
-  globals: {};
+  globals: {
+    variables: Variable;
+  };
+  globalsSelect: {
+    variables: VariablesSelect<false> | VariablesSelect<true>;
+  };
   locale: null;
-  user: User & {
-    collection: 'users';
+  user: Usuario & {
+    collection: 'usuarios';
+  };
+  jobs: {
+    tasks: unknown;
+    workflows: unknown;
   };
 }
-export interface UserAuthOperations {
+export interface UsuarioAuthOperations {
   forgotPassword: {
     email: string;
     password: string;
@@ -45,10 +65,23 @@ export interface UserAuthOperations {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users".
+ * via the `definition` "usuarios".
  */
-export interface User {
+export interface Usuario {
   id: string;
+  titulo: string;
+  rol: 'SUPERADMINISTRADOR' | 'ADMINISTRADOR' | 'CLIENTE';
+  datos_personales?: {
+    nombre?: string | null;
+    apellido?: string | null;
+    cuit: number;
+    domicilio?: string | null;
+    telefono: number;
+    nacimiento?: string | null;
+  };
+  confirmado?: boolean | null;
+  activo?: boolean | null;
+  desarrollador?: boolean | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -62,22 +95,78 @@ export interface User {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media".
+ * via the `definition` "medidores".
  */
-export interface Media {
+export interface Medidore {
   id: string;
-  alt: string;
+  titulo: string;
+  direccion: string;
+  lectura_inicial: number;
+  numero_medidor: string;
+  usuario?: (string | null) | Usuario;
+  activo?: boolean | null;
   updatedAt: string;
   createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "consumos".
+ */
+export interface Consumo {
+  id: string;
+  medidor: string | Medidore;
+  lectura: number;
+  fecha_lectura: string;
+  estado?: ('ADEUDADO' | 'PAGADO') | null;
+  periodo: string;
+  periodo_normalizado?: string | null;
+  datos_facturacion?: {
+    precio_final?: number | null;
+    precio_base?: number | null;
+    consumo_base?: number | null;
+    precio_litro?: number | null;
+    consumo_real?: number | null;
+    precio_regular?: number | null;
+    dia_primer_vencimiento?: number | null;
+    precio_primer_vencimiento?: number | null;
+    dia_segundo_vencimiento?: number | null;
+    precio_segundo_vencimiento?: number | null;
+    fecha_pago?: string | null;
+    id_pago_mp?: string | null;
+    meses_vencido?: number | null;
+  };
+  precio_final?: number | null;
+  consumo_real?: number | null;
+  titulo: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-locked-documents".
+ */
+export interface PayloadLockedDocument {
+  id: string;
+  document?:
+    | ({
+        relationTo: 'usuarios';
+        value: string | Usuario;
+      } | null)
+    | ({
+        relationTo: 'medidores';
+        value: string | Medidore;
+      } | null)
+    | ({
+        relationTo: 'consumos';
+        value: string | Consumo;
+      } | null);
+  globalSlug?: string | null;
+  user: {
+    relationTo: 'usuarios';
+    value: string | Usuario;
+  };
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -86,8 +175,8 @@ export interface Media {
 export interface PayloadPreference {
   id: string;
   user: {
-    relationTo: 'users';
-    value: string | User;
+    relationTo: 'usuarios';
+    value: string | Usuario;
   };
   key?: string | null;
   value?:
@@ -112,6 +201,148 @@ export interface PayloadMigration {
   batch?: number | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "usuarios_select".
+ */
+export interface UsuariosSelect<T extends boolean = true> {
+  titulo?: T;
+  rol?: T;
+  datos_personales?:
+    | T
+    | {
+        nombre?: T;
+        apellido?: T;
+        cuit?: T;
+        domicilio?: T;
+        telefono?: T;
+        nacimiento?: T;
+      };
+  confirmado?: T;
+  activo?: T;
+  desarrollador?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  email?: T;
+  resetPasswordToken?: T;
+  resetPasswordExpiration?: T;
+  salt?: T;
+  hash?: T;
+  loginAttempts?: T;
+  lockUntil?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "medidores_select".
+ */
+export interface MedidoresSelect<T extends boolean = true> {
+  titulo?: T;
+  direccion?: T;
+  lectura_inicial?: T;
+  numero_medidor?: T;
+  usuario?: T;
+  activo?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "consumos_select".
+ */
+export interface ConsumosSelect<T extends boolean = true> {
+  medidor?: T;
+  lectura?: T;
+  fecha_lectura?: T;
+  estado?: T;
+  periodo?: T;
+  periodo_normalizado?: T;
+  datos_facturacion?:
+    | T
+    | {
+        precio_final?: T;
+        precio_base?: T;
+        consumo_base?: T;
+        precio_litro?: T;
+        consumo_real?: T;
+        precio_regular?: T;
+        dia_primer_vencimiento?: T;
+        precio_primer_vencimiento?: T;
+        dia_segundo_vencimiento?: T;
+        precio_segundo_vencimiento?: T;
+        fecha_pago?: T;
+        id_pago_mp?: T;
+        meses_vencido?: T;
+      };
+  precio_final?: T;
+  consumo_real?: T;
+  titulo?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-locked-documents_select".
+ */
+export interface PayloadLockedDocumentsSelect<T extends boolean = true> {
+  document?: T;
+  globalSlug?: T;
+  user?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-preferences_select".
+ */
+export interface PayloadPreferencesSelect<T extends boolean = true> {
+  user?: T;
+  key?: T;
+  value?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-migrations_select".
+ */
+export interface PayloadMigrationsSelect<T extends boolean = true> {
+  name?: T;
+  batch?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "variables".
+ */
+export interface Variable {
+  id: string;
+  primer_vencimiento: number;
+  interes_primer_vencimiento: number;
+  segundo_vencimiento: number;
+  interes_segundo_vencimiento: number;
+  consumo_base: number;
+  precio_base: number;
+  interes_mensual: number;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "variables_select".
+ */
+export interface VariablesSelect<T extends boolean = true> {
+  primer_vencimiento?: T;
+  interes_primer_vencimiento?: T;
+  segundo_vencimiento?: T;
+  interes_segundo_vencimiento?: T;
+  consumo_base?: T;
+  precio_base?: T;
+  interes_mensual?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

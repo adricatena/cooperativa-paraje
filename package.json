@@ -19,13 +19,17 @@
     "@payloadcms/next": "latest",
     "@payloadcms/payload-cloud": "latest",
     "@payloadcms/richtext-lexical": "latest",
+    "@react-pdf/renderer": "^4.1.5",
     "cross-env": "^7.0.3",
+    "dayjs": "^1.11.13",
     "graphql": "^16.8.1",
+    "mercadopago": "^2.1.0",
     "next": "15.0.4",
     "payload": "latest",
     "react": "19.0.0",
     "react-dom": "19.0.0",
-    "sharp": "0.32.6"
+    "sharp": "0.32.6",
+    "sonner": "^1.7.0"
   },
   "devDependencies": {
     "@types/node": "^22.5.4",
@@ -38,5 +42,5 @@
   "engines": {
     "node": "^18.20.2 || >=20.9.0"
   },
-  "packageManager": "pnpm@9.13.2"
+  "packageManager": "pnpm@9.15.0"
 }

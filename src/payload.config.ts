@@ -4,22 +4,35 @@ import { payloadCloudPlugin } from '@payloadcms/payload-cloud'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import path from 'path'
 import { buildConfig } from 'payload'
+import { es } from 'payload/i18n/es'
 import sharp from 'sharp'
 import { fileURLToPath } from 'url'
-import { Media } from './collections/Media'
-import { Users } from './collections/Users'
+import { Consumos } from './collections/Consumos'
+import { Medidores } from './collections/Medidores'
+import { Usuarios } from './collections/Usuarios'
+import { Variables } from './globals/Variables'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
 export default buildConfig({
   admin: {
-    user: Users.slug,
+    user: Usuarios.slug,
     importMap: {
       baseDir: path.resolve(dirname),
     },
+    components: {
+      graphics: {
+        // Icon: '/brand/home-icon#HomeIcon',
+        Logo: '/brand/logo#Logo',
+      },
+    },
+    meta: {
+      titleSuffix: ' - Cooperativa Paraje La Virgen',
+    },
   },
-  collections: [Users, Media],
+  collections: [Usuarios, Medidores, Consumos],
+  globals: [Variables],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
@@ -33,4 +46,8 @@ export default buildConfig({
     payloadCloudPlugin(),
     // storage-adapter-placeholder
   ],
+  i18n: {
+    fallbackLanguage: 'es',
+    supportedLanguages: { es },
+  },
 })
