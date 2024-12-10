@@ -8,8 +8,6 @@ import { useSearchParams } from 'next/navigation'
 import type { PaginatedDocs } from 'payload'
 import { useEffect, useState, type ReactNode } from 'react'
 
-type a = Required<Consumo['datos_facturacion']>
-
 type Columns = {
   key: keyof Omit<Consumo, 'datos_facturacion'>
   label: string
