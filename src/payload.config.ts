@@ -10,6 +10,7 @@ import { fileURLToPath } from 'url'
 import { Consumos } from './collections/Consumos'
 import { Medidores } from './collections/Medidores'
 import { Usuarios } from './collections/Usuarios'
+import { notificacionPagoHandler } from './endpoints/notificacion-pago'
 import { Variables } from './globals/Variables'
 
 const filename = fileURLToPath(import.meta.url)
@@ -50,4 +51,11 @@ export default buildConfig({
     fallbackLanguage: 'es',
     supportedLanguages: { es },
   },
+  endpoints: [
+    {
+      path: '/notificaciones/pagos',
+      method: 'post',
+      handler: notificacionPagoHandler,
+    },
+  ],
 })

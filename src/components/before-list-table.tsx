@@ -2,7 +2,7 @@
 import type { Consumo } from '@/payload-types'
 import { round } from '@/utils/math'
 import { GET } from '@/utils/queries'
-import { Button } from '@payloadcms/ui'
+import { Button, useAuth } from '@payloadcms/ui'
 import { Document, Page, PDFDownloadLink, Text, View } from '@react-pdf/renderer'
 import { useSearchParams } from 'next/navigation'
 import type { PaginatedDocs } from 'payload'
@@ -93,6 +93,7 @@ const COLUMNS_FACTURACION: ColumnsFacturacion[] = [
 ]
 
 export function BeforeListTable() {
+  const { user } = useAuth()
   const searchParams = useSearchParams()
 
   const [consumos, setConsumos] = useState<Consumo[]>()
@@ -101,10 +102,11 @@ export function BeforeListTable() {
     ;(async () => {
       const r = await GET(`/api/consumos?${searchParams.toString()}`)
       const data: PaginatedDocs<Consumo> = await r.json()
-      console.log(data)
       setConsumos(data.docs)
     })()
   }, [searchParams])
+
+  if (user?.rol === 'CLIENTE') return null
 
   if (!consumos || !consumos?.length) {
     return (

@@ -203,9 +203,8 @@ const crearReferenciaMP: Endpoint = {
     if (!req.user) {
       return Response.json({ error: 'No autorizado' }, { status: 401 })
     }
-    console.log(req)
 
-    const id = false
+    const id = req.routeParams?.id as string
     if (!id) {
       return Response.json({ error: 'No se encontro el ID' }, { status: 400 })
     }

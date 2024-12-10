@@ -8,7 +8,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 export function TabPagar() {
   const { user } = useAuth()
-  console.log(user)
   const path = usePathname()
   const id = useMemo(() => path.split('/').at(-1), [path])
 
@@ -41,6 +40,7 @@ export function TabPagar() {
 
   useEffect(() => {
     ;(async () => {
+      setIsLoading(true)
       try {
         const r = await GET(`/api/consumos/${id}`)
         const data: Consumo = await r.json()
@@ -51,8 +51,7 @@ export function TabPagar() {
         setIsLoading(false)
       }
     })()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [id])
 
   if (isLoading) return <Button disabled>Cargando...</Button>
 
