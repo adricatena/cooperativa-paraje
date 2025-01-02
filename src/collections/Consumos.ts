@@ -9,8 +9,10 @@ import {
   isDevFieldAccess,
   isSuperAdminOrMoreFieldAccess,
 } from '@/hooks/field-access'
-import type { Consumo } from '@/payload-types'
+import type { Consumo, Medidore } from '@/payload-types'
+import { COLUMNS, COLUMNS_FACTURACION, COLUMNS_HEADERS_LABELS } from '@/utils/consumos'
 import { round } from '@/utils/math'
+import { isWhere } from '@/utils/queries'
 import dayjs from 'dayjs'
 import MercadoPagoConfig, { Preference } from 'mercadopago'
 import {
@@ -22,6 +24,7 @@ import {
   type CollectionConfig,
   type Endpoint,
 } from 'payload'
+import * as qs from 'qs-esm'
 
 const PERIODO_FORMAT = 'YYYY/MM'
 
@@ -313,6 +316,62 @@ const crearReferenciaMP: Endpoint = {
     }
   },
 }
+const exportarTablaEndpoint: Endpoint = {
+  path: '/exportar-tabla',
+  method: 'get',
+  handler: async (req) => {
+    if (!req.user || !req.url) {
+      return Response.json({ error: 'No autorizado' }, { status: 401 })
+    }
+
+    const params = qs.parse(req.url.split('?').at(-1) ?? '')
+
+    const limit = typeof params?.limit === 'string' ? parseInt(params.limit) : undefined
+    const page = typeof params?.page === 'string' ? parseInt(params.page) : undefined
+    const where = isWhere(params?.where) ? params.where : undefined
+
+    const { docs: consumos } = await req.payload.find({
+      collection: 'consumos',
+      limit,
+      page,
+      where,
+    })
+
+    const csvData = consumos.map((consumo) => {
+      const row = COLUMNS.map((column) => {
+        if (column.key === 'medidor') {
+          return (consumo.medidor as Medidore)?.titulo
+        } else if (column.key === 'fecha_lectura') {
+          return new Date(consumo.fecha_lectura).toLocaleDateString('es-AR')
+        } else {
+          return consumo[column.key]
+        }
+      })
+      const rowFacturacion = COLUMNS_FACTURACION.map((column) => {
+        if (column.key === 'fecha_pago') {
+          return consumo?.datos_facturacion?.fecha_pago
+            ? new Date(consumo.datos_facturacion.fecha_pago).toLocaleDateString('es-AR')
+            : ''
+        } else {
+          return consumo.datos_facturacion![column.key]
+        }
+      })
+
+      return row.join(';') + ';' + rowFacturacion.join(';')
+    })
+
+    const csvRows = [COLUMNS_HEADERS_LABELS.join(';'), ...csvData]
+
+    const csvContent = csvRows.join('\n')
+
+    const headers = {
+      'Content-Type': 'text/csv',
+      'Content-Disposition': 'attachment; filename=consumos.csv',
+    }
+
+    return new Response(csvContent, { headers })
+  },
+}
 
 export const Consumos: CollectionConfig = {
   slug: 'consumos',
@@ -353,7 +412,7 @@ export const Consumos: CollectionConfig = {
     beforeDelete: [beforeDelete],
     beforeRead: [beforeRead],
   },
-  endpoints: [crearReferenciaMP],
+  endpoints: [crearReferenciaMP, exportarTablaEndpoint],
   fields: [
     {
       name: 'medidor',
