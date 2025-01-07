@@ -68,7 +68,7 @@ export const Usuarios: CollectionConfig = {
   auth: true,
   admin: {
     useAsTitle: 'titulo',
-    hideAPIURL: process.env.PAYLOAD_PUBLIC_ENV !== 'dev',
+    hideAPIURL: process.env.NODE_ENV === 'production',
     defaultColumns: ['titulo', 'rol', 'email', 'confirmado', 'activo'],
   },
   labels: {

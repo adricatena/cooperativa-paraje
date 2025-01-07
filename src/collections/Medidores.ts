@@ -47,7 +47,7 @@ export const Medidores: CollectionConfig = {
   },
   admin: {
     useAsTitle: 'titulo',
-    hideAPIURL: process.env.NEXT_PUBLIC_ENV !== 'dev',
+    hideAPIURL: process.env.NODE_ENV === 'production',
     defaultColumns: [
       'titulo',
       'numero_medidor',

@@ -5,7 +5,7 @@ export const Variables: GlobalConfig = {
   slug: 'variables',
   label: 'Variables',
   admin: {
-    hideAPIURL: process.env.PAYLOAD_PUBLIC_ENV !== 'dev',
+    hideAPIURL: process.env.NODE_ENV === 'production',
     hidden: ({ user }) =>
       !(user?.desarrollador || user?.rol === 'SUPERADMINISTRADOR' || user?.rol === 'ADMINISTRADOR'),
   },

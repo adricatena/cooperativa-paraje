@@ -381,7 +381,7 @@ export const Consumos: CollectionConfig = {
   },
   admin: {
     useAsTitle: 'titulo',
-    hideAPIURL: process.env.PAYLOAD_PUBLIC_ENV !== 'dev',
+    hideAPIURL: process.env.NODE_ENV === 'production',
     defaultColumns: ['titulo', 'estado', 'periodo', 'medidor', 'lectura'],
     components: {
       beforeListTable: ['/components/before-list-table#BeforeListTable'],
