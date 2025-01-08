@@ -344,7 +344,9 @@ const exportarTablaEndpoint: Endpoint = {
         } else if (column.key === 'fecha_lectura') {
           return new Date(consumo.fecha_lectura).toLocaleDateString('es-AR')
         } else {
-          return consumo[column.key]
+          const data = consumo[column.key]
+          if (typeof consumo[column.key] === 'number') return `${data}`.replace('.', ',')
+          return data
         }
       })
       const rowFacturacion = COLUMNS_FACTURACION.map((column) => {
