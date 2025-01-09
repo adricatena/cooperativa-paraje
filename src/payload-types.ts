@@ -72,11 +72,29 @@ export interface Usuario {
   titulo: string;
   rol: 'SUPERADMINISTRADOR' | 'ADMINISTRADOR' | 'CLIENTE';
   datos_personales?: {
+    /**
+     * Nombre completo
+     */
     nombre?: string | null;
+    /**
+     * Apellido completo
+     */
     apellido?: string | null;
+    /**
+     * Sin guiones ni puntos
+     */
     cuit: number;
+    /**
+     * Domicilio real del cliente
+     */
     domicilio?: string | null;
+    /**
+     * Telefono/Celular del cliente
+     */
     telefono: number;
+    /**
+     * Fecha de nacimiento del cliente
+     */
     nacimiento?: string | null;
   };
   confirmado?: boolean | null;
@@ -100,8 +118,17 @@ export interface Usuario {
 export interface Medidore {
   id: string;
   titulo: string;
+  /**
+   * Direccion de instalacion del medidor
+   */
   direccion: string;
+  /**
+   * Lectura inicial del medidor
+   */
   lectura_inicial: number;
+  /**
+   * Identificador del medidor
+   */
   numero_medidor: string;
   usuario?: (string | null) | Usuario;
   activo?: boolean | null;
@@ -115,9 +142,18 @@ export interface Medidore {
 export interface Consumo {
   id: string;
   medidor: string | Medidore;
+  /**
+   * Numero obtenido de la lectura
+   */
   lectura: number;
+  /**
+   * Fecha en que se realizo la lectura
+   */
   fecha_lectura: string;
   estado?: ('ADEUDADO' | 'PAGADO') | null;
+  /**
+   * Periodo (numero de mes) correspondiente a la lectura
+   */
   periodo: string;
   periodo_normalizado?: string | null;
   datos_facturacion?: {
@@ -318,12 +354,33 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
  */
 export interface Variable {
   id: string;
+  /**
+   * Fecha de primer vencimiento del comprobante
+   */
   primer_vencimiento: number;
+  /**
+   * Porcentaje de interes a aplicar en el primer vencimiento
+   */
   interes_primer_vencimiento: number;
+  /**
+   * Fecha de segundo vencimiento del comprobante
+   */
   segundo_vencimiento: number;
+  /**
+   * Porcentaje de interes a aplicar en el segundo vencimiento
+   */
   interes_segundo_vencimiento: number;
+  /**
+   * Consumo en m3
+   */
   consumo_base: number;
+  /**
+   * Precio en pesos argentinos para el consumo base.
+   */
   precio_base: number;
+  /**
+   * Porcentaje de interes mensual a aplicar luego del ultimo vencimiento
+   */
   interes_mensual: number;
   updatedAt?: string | null;
   createdAt?: string | null;

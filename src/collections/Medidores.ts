@@ -56,6 +56,11 @@ export const Medidores: CollectionConfig = {
       'activo',
       'usuario',
     ],
+    components: {
+      beforeListTable: [
+        '/components/exportar-tabla/exportar-tabla-medidores#ExportarTablaMedidores',
+      ],
+    },
   },
   access: {
     create: isAdminOrMoreCollectionAccess,
