@@ -71,12 +71,16 @@ type Props = {
 }
 export function ExportarTabla({ collection, mapData }: Props) {
   const { user } = useAuth()
-  const searchParams = useSearchParams()
+  const rawSearchParams = useSearchParams()
 
   if (user?.rol === 'CLIENTE') return null
 
   async function handleClick() {
     try {
+      const searchParams = new URLSearchParams(rawSearchParams.toString())
+      searchParams.delete('limit')
+      searchParams.set('pagination', 'false')
+
       const url = `/api/${collection}?${searchParams.toString()}`
       const r = await GET(url)
       const data: PaginatedDocs = await r.json()
@@ -90,10 +94,8 @@ export function ExportarTabla({ collection, mapData }: Props) {
   }
 
   return (
-    <>
-      <Button size="small" buttonStyle="secondary" onClick={handleClick}>
-        Exportar Tabla
-      </Button>
-    </>
+    <Button size="small" buttonStyle="secondary" onClick={handleClick}>
+      Exportar Tabla
+    </Button>
   )
 }

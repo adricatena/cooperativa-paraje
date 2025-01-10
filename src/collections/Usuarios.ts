@@ -70,6 +70,9 @@ export const Usuarios: CollectionConfig = {
     useAsTitle: 'titulo',
     hideAPIURL: process.env.NODE_ENV === 'production',
     defaultColumns: ['titulo', 'rol', 'email', 'confirmado', 'activo'],
+    components: {
+      beforeListTable: ['/components/exportar-tabla/exportar-tabla-usuarios#ExportarTablaUsuarios'],
+    },
   },
   labels: {
     singular: 'Usuario',

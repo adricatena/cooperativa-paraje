@@ -1,11 +1,7 @@
 import type { Medidore } from '@/payload-types'
+import type { ExportTableColumn } from './exportar-tabla'
 
-type MedidoresColumns = {
-  key: keyof Medidore
-  label: string
-}
-
-export const MEDIDORES_COLUMNS: MedidoresColumns[] = [
+export const MEDIDORES_COLUMNS: ExportTableColumn<Medidore>[] = [
   {
     key: 'usuario',
     label: 'Usuario',

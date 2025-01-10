@@ -1,15 +1,7 @@
 import type { Consumo } from '@/payload-types'
+import type { ExportTableColumn } from './exportar-tabla'
 
-type Columns = {
-  key: keyof Omit<Consumo, 'datos_facturacion'>
-  label: string
-}
-type ColumnsFacturacion = {
-  key: keyof Required<Consumo>['datos_facturacion']
-  label: string
-}
-
-export const COLUMNS: Columns[] = [
+export const COLUMNS: ExportTableColumn<Omit<Consumo, 'datos_facturacion'>>[] = [
   {
     key: 'medidor',
     label: 'Medidor',
@@ -40,7 +32,8 @@ export const COLUMNS: Columns[] = [
   },
 ]
 
-export const COLUMNS_FACTURACION: ColumnsFacturacion[] = [
+type DatosFacturacion = Required<Consumo>['datos_facturacion']
+export const COLUMNS_FACTURACION: ExportTableColumn<DatosFacturacion>[] = [
   {
     key: 'consumo_base',
     label: 'Consumo Base',
@@ -82,7 +75,3 @@ export const COLUMNS_FACTURACION: ColumnsFacturacion[] = [
     label: 'Meses Vencido',
   },
 ]
-
-export const COLUMNS_HEADERS_LABELS: string[] = []
-COLUMNS.forEach((column) => COLUMNS_HEADERS_LABELS.push(column.label))
-COLUMNS_FACTURACION.forEach((column) => COLUMNS_HEADERS_LABELS.push(column.label))
