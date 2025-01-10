@@ -74,6 +74,13 @@ export const Medidores: CollectionConfig = {
   fields: [
     fieldTitulo({ defaultValue: 'Medidor' }),
     {
+      type: 'join',
+      name: 'consumos',
+      collection: 'consumos',
+      on: 'medidor',
+      label: 'Consumos',
+    },
+    {
       name: 'direccion',
       label: 'Direccion',
       type: 'text',

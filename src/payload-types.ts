@@ -18,7 +18,14 @@ export interface Config {
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
   };
-  collectionsJoins: {};
+  collectionsJoins: {
+    usuarios: {
+      medidores: 'medidores';
+    };
+    medidores: {
+      Consumos: 'consumos';
+    };
+  };
   collectionsSelect: {
     usuarios: UsuariosSelect<false> | UsuariosSelect<true>;
     medidores: MedidoresSelect<false> | MedidoresSelect<true>;
@@ -70,6 +77,10 @@ export interface UsuarioAuthOperations {
 export interface Usuario {
   id: string;
   titulo: string;
+  medidores?: {
+    docs?: (string | Medidore)[] | null;
+    hasNextPage?: boolean | null;
+  } | null;
   rol: 'SUPERADMINISTRADOR' | 'ADMINISTRADOR' | 'CLIENTE';
   datos_personales?: {
     /**
@@ -118,6 +129,10 @@ export interface Usuario {
 export interface Medidore {
   id: string;
   titulo: string;
+  Consumos?: {
+    docs?: (string | Consumo)[] | null;
+    hasNextPage?: boolean | null;
+  } | null;
   /**
    * Direccion de instalacion del medidor
    */
@@ -244,6 +259,7 @@ export interface PayloadMigration {
  */
 export interface UsuariosSelect<T extends boolean = true> {
   titulo?: T;
+  medidores?: T;
   rol?: T;
   datos_personales?:
     | T
@@ -274,6 +290,7 @@ export interface UsuariosSelect<T extends boolean = true> {
  */
 export interface MedidoresSelect<T extends boolean = true> {
   titulo?: T;
+  Consumos?: T;
   direccion?: T;
   lectura_inicial?: T;
   numero_medidor?: T;

@@ -92,6 +92,13 @@ export const Usuarios: CollectionConfig = {
     // Add more fields as needed
     fieldTitulo({ defaultValue: 'Usuario' }),
     {
+      type: 'join',
+      name: 'medidores',
+      collection: 'medidores',
+      on: 'usuario',
+      label: 'Medidores',
+    },
+    {
       type: 'select',
       name: 'rol',
       label: 'Rol',
