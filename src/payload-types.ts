@@ -23,7 +23,7 @@ export interface Config {
       medidores: 'medidores';
     };
     medidores: {
-      Consumos: 'consumos';
+      consumos: 'consumos';
     };
   };
   collectionsSelect: {
@@ -129,7 +129,7 @@ export interface Usuario {
 export interface Medidore {
   id: string;
   titulo: string;
-  Consumos?: {
+  consumos?: {
     docs?: (string | Consumo)[] | null;
     hasNextPage?: boolean | null;
   } | null;
@@ -290,7 +290,7 @@ export interface UsuariosSelect<T extends boolean = true> {
  */
 export interface MedidoresSelect<T extends boolean = true> {
   titulo?: T;
-  Consumos?: T;
+  consumos?: T;
   direccion?: T;
   lectura_inicial?: T;
   numero_medidor?: T;
