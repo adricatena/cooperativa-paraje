@@ -30,7 +30,7 @@ function convertToCSV(arr: any[]) {
 
           return strValue
         })
-        .join(','),
+        .join(';'),
     )
     .join('\n')
 }
