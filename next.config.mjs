@@ -9,6 +9,7 @@ const nextConfig = {
     return config
   },
   serverComponentsExternalPackages: ['@react-pdf/renderer'],
+  output: 'standalone',
 }
 
 export default withPayload(nextConfig)
