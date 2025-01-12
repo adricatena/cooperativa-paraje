@@ -8,7 +8,6 @@ const nextConfig = {
     config.resolve.alias.encoding = false
     return config
   },
-  serverComponentsExternalPackages: ['@react-pdf/renderer'],
   output: 'standalone',
 }
 
