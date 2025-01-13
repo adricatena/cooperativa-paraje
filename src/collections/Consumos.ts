@@ -150,6 +150,7 @@ const beforeChange: CollectionBeforeChangeHook<Consumo> = async ({ data, req, op
         precio_segundo_vencimiento,
       },
       consumo_real,
+      nro_comprobante: Math.trunc(Date.now() / 1000),
     }
   }
 }
@@ -356,6 +357,17 @@ export const Consumos: CollectionConfig = {
   endpoints: [crearReferenciaMP],
   fields: [
     {
+      type: 'ui',
+      name: 'comprobante',
+      label: 'Comprobante',
+      admin: {
+        condition: (data) => data?.estado === 'PAGADO' && process.env.NODE_ENV === 'development',
+        components: {
+          Field: '/components/comprobante/viewer#ComprobanteViewer',
+        },
+      },
+    },
+    {
       name: 'medidor',
       label: 'Medidor',
       type: 'relationship',
@@ -427,6 +439,18 @@ export const Consumos: CollectionConfig = {
       name: 'periodo_normalizado',
       admin: {
         disabled: true,
+      },
+    },
+    {
+      type: 'number',
+      name: 'nro_comprobante',
+      label: 'Numero de comprobante',
+      unique: true,
+      admin: {
+        readOnly: true,
+        condition: (data) => Boolean(data?.id),
+        disableListColumn: true,
+        disableListFilter: true,
       },
     },
     {

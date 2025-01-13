@@ -171,6 +171,7 @@ export interface Consumo {
    */
   periodo: string;
   periodo_normalizado?: string | null;
+  nro_comprobante?: number | null;
   datos_facturacion?: {
     precio_final?: number | null;
     precio_base?: number | null;
@@ -310,6 +311,7 @@ export interface ConsumosSelect<T extends boolean = true> {
   estado?: T;
   periodo?: T;
   periodo_normalizado?: T;
+  nro_comprobante?: T;
   datos_facturacion?:
     | T
     | {
