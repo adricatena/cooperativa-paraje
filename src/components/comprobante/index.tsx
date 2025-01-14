@@ -59,6 +59,8 @@ export function Comprobante({ consumo, from, variables }: Props) {
       (consumo.datos_facturacion?.precio_regular ?? 0),
     [],
   )
+  const importeNetoIntereses = useMemo(() => round(intereses / 1.105), [])
+  const importeIvaIntereses = useMemo(() => round(intereses - importeNetoIntereses), [])
 
   return (
     <Document>
@@ -214,7 +216,7 @@ export function Comprobante({ consumo, from, variables }: Props) {
               <Text style={[styles.texto]}>
                 Importe IVA intereses: $
                 {consumo.precio_final !== consumo.datos_facturacion?.precio_regular
-                  ? intereses / 1.105
+                  ? importeIvaIntereses
                   : 0}
               </Text>
               <Text style={[styles.texto]}>

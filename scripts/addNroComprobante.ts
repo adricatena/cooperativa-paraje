@@ -6,9 +6,9 @@ import { MongoClient } from 'mongodb'
  */
 
 const agg = [
-  {
+  /* {
     $limit: 10, // Agregamos el límite al inicio del pipeline
-  },
+  }, */
   {
     $addFields: {
       nro_comprobante: {
