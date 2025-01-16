@@ -1,5 +1,5 @@
 'use client'
-import type { Consumo, Variable } from '@/payload-types'
+import type { Consumo } from '@/payload-types'
 import { GET } from '@/utils/queries'
 import { Button, toast, useAuth } from '@payloadcms/ui'
 import { PDFDownloadLink } from '@react-pdf/renderer'
@@ -14,7 +14,6 @@ export function TabPagar() {
 
   const [isLoading, setIsLoading] = useState(true)
   const consumo = useRef<Consumo>(null)
-  const variables = useRef<Variable>(null)
 
   const handleClickPagarConMP = useCallback(async () => {
     setIsLoading(true)
@@ -47,10 +46,6 @@ export function TabPagar() {
         const consumosRes = await GET(`/api/consumos/${id}`)
         const consumosData: Consumo = await consumosRes.json()
         consumo.current = consumosData
-
-        const variablesRes = await GET(`/api/globals/variables`)
-        const variablesData: Variable = await variablesRes.json()
-        variables.current = variablesData
       } catch (error) {
         console.error(error)
       } finally {
@@ -64,9 +59,7 @@ export function TabPagar() {
   if (consumo?.current?.estado === 'PAGADO') {
     return (
       <PDFDownloadLink
-        document={
-          <Comprobante consumo={consumo.current} from="link" variables={variables.current!} />
-        }
+        document={<Comprobante consumo={consumo.current} />}
         fileName={`comprobante_pago_${consumo.current?.titulo}.pdf`}
       >
         <Button>Descargar comprobante</Button>

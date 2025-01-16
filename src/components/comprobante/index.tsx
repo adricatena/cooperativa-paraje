@@ -1,4 +1,4 @@
-import type { Consumo, Medidore, Usuario, Variable } from '@/payload-types'
+import type { Consumo, Medidore, Usuario } from '@/payload-types'
 import { round } from '@/utils/math'
 import { Document, Page, StyleSheet, Text, View } from '@react-pdf/renderer'
 import { useMemo } from 'react'
@@ -37,30 +37,19 @@ const BLOQUE_TITULO = [
 
 type Props = {
   consumo: Consumo
-  from: 'viewer' | 'link'
-  variables: Variable
 }
-export function Comprobante({ consumo, from, variables }: Props) {
+export function Comprobante({ consumo }: Props) {
   const createdAt = useMemo(() => new Date(consumo.createdAt), [])
   const createdAtMonth = useMemo(() => `${createdAt.getMonth() + 1}/${createdAt.getFullYear()}`, [])
 
   const importeNeto = useMemo(
-    () => round((consumo.datos_facturacion?.precio_regular ?? 0) / 1.21),
+    () => round((consumo.datos_facturacion?.precio_final ?? 0) / 1.21),
     [],
   )
   const importeIva = useMemo(
-    () => round((consumo.datos_facturacion?.precio_regular ?? 0) - importeNeto),
+    () => round(((consumo.datos_facturacion?.precio_final ?? 0) * 100 - importeNeto * 100) / 100),
     [],
   )
-
-  const intereses = useMemo(
-    () =>
-      (consumo.datos_facturacion?.precio_final ?? 0) -
-      (consumo.datos_facturacion?.precio_regular ?? 0),
-    [],
-  )
-  const importeNetoIntereses = useMemo(() => round(intereses / 1.105), [])
-  const importeIvaIntereses = useMemo(() => round(intereses - importeNetoIntereses), [])
 
   return (
     <Document>
@@ -212,13 +201,6 @@ export function Comprobante({ consumo, from, variables }: Props) {
               <Text style={[styles.texto]}>Importe neto: ${importeNeto}</Text>
               <Text style={[styles.texto]}>Alicuota IVA: %21</Text>
               <Text style={[styles.texto]}>Importe IVA: ${importeIva}</Text>
-              <Text style={[styles.texto]}>Alicuota IVA intereses: %10,5</Text>
-              <Text style={[styles.texto]}>
-                Importe IVA intereses: $
-                {consumo.precio_final !== consumo.datos_facturacion?.precio_regular
-                  ? importeIvaIntereses
-                  : 0}
-              </Text>
               <Text style={[styles.texto]}>
                 Fecha de pago:{' '}
                 {new Date(consumo.datos_facturacion?.fecha_pago ?? '').toLocaleDateString('es-AR')}
@@ -230,5 +212,3 @@ export function Comprobante({ consumo, from, variables }: Props) {
     </Document>
   )
 }
-
-export default Comprobante

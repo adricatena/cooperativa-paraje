@@ -3,6 +3,7 @@ import { GET } from '@/utils/queries'
 import { Button, toast, useAuth } from '@payloadcms/ui'
 import { useSearchParams } from 'next/navigation'
 import type { PaginatedDocs } from 'payload'
+import { useCallback } from 'react'
 
 // Función para convertir array de objetos a CSV
 function convertToCSV(arr: any[]) {
@@ -73,9 +74,7 @@ export function ExportarTabla({ collection, mapData }: Props) {
   const { user } = useAuth()
   const rawSearchParams = useSearchParams()
 
-  if (user?.rol === 'CLIENTE') return null
-
-  async function handleClick() {
+  const handleClick = useCallback(async () => {
     try {
       const searchParams = new URLSearchParams(rawSearchParams.toString())
       searchParams.delete('limit')
@@ -91,7 +90,9 @@ export function ExportarTabla({ collection, mapData }: Props) {
       console.error('Error al descargar el CSV:', error)
       toast.error('Error al descargar el CSV')
     }
-  }
+  }, [collection, rawSearchParams, mapData])
+
+  if (user?.rol === 'CLIENTE') return null
 
   return (
     <Button size="small" buttonStyle="secondary" onClick={handleClick}>

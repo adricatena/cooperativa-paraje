@@ -97,6 +97,10 @@ export const Usuarios: CollectionConfig = {
       collection: 'medidores',
       on: 'usuario',
       label: 'Medidores',
+      admin: {
+        disableListColumn: true,
+        disableListFilter: true,
+      },
     },
     {
       type: 'select',

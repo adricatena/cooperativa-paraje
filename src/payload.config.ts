@@ -22,12 +22,17 @@ export default buildConfig({
     importMap: {
       baseDir: path.resolve(dirname),
     },
+    avatar: 'default',
     components: {
       graphics: {
         // Icon: '/brand/home-icon#HomeIcon',
         Logo: '/brand/logo#Logo',
       },
+      logout: {
+        Button: '/components/logout-button#LogoutButton',
+      },
     },
+    theme: 'light',
     meta: {
       titleSuffix: ' - Cooperativa Paraje La Virgen',
     },

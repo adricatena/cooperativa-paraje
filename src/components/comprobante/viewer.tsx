@@ -11,7 +11,5 @@ export const ComprobanteViewer: FieldServerComponent = async ({ data, payload })
     })
   }
 
-  const variables = await payload.findGlobal({ slug: 'variables' })
-
-  return <ComprobanteClientViewer consumo={{ ...data, medidor } as Consumo} variables={variables} />
+  return <ComprobanteClientViewer consumo={{ ...data, medidor } as Consumo} />
 }

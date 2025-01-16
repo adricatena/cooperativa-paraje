@@ -79,6 +79,10 @@ export const Medidores: CollectionConfig = {
       collection: 'consumos',
       on: 'medidor',
       label: 'Consumos',
+      admin: {
+        disableListColumn: true,
+        disableListFilter: true,
+      },
     },
     {
       name: 'direccion',
