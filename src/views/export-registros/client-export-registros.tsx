@@ -9,8 +9,7 @@ import { useCallback, useRef } from 'react'
 
 const TIPO_DE_COMPROBANTE = '018' // LIQUIDACION DE SERVICIOS PUBLICOS CLASE B
 const PUNTO_DE_VENTA = '00002'
-const NRO_COMPROBANTE = '00000000000000018019'
-const NRO_COMPROBANTE_HASTA = '00000000000000018019'
+const NRO_COMPROBANTE_LENGTH = 20
 const COD_DOC_COMPRADOR = '96' // Código de documento del comprador
 const IMPORTE_CONCEPTOS_NO_GRAVADOS = '000000000000000' // Importe total de conceptos que no integran el precio neto gravado
 const PERCEPCION_A_NO_CATEGORIZADOS = '000000000000000' // Percepción a no categorizados
@@ -36,13 +35,12 @@ function createComprobantes({ consumos }: CreateTXTArgs) {
       let renglon = ''
       const fechaPago = new Date(consumo.datos_facturacion?.fecha_pago ?? '')
       const fechaComprobante = `${fechaPago.getFullYear()}${fechaPago.getMonth() + 1}${fechaPago.getDate()}`
-      renglon +=
-        fechaComprobante +
-        TIPO_DE_COMPROBANTE +
-        PUNTO_DE_VENTA +
-        NRO_COMPROBANTE +
-        NRO_COMPROBANTE_HASTA +
-        COD_DOC_COMPRADOR
+      renglon += fechaComprobante + TIPO_DE_COMPROBANTE + PUNTO_DE_VENTA
+
+      const nroComprobante = (consumo.nro_comprobante ?? 0)
+        .toString()
+        .padStart(NRO_COMPROBANTE_LENGTH, '0')
+      renglon += nroComprobante + nroComprobante + COD_DOC_COMPRADOR
 
       const usuario = (consumo.medidor as Medidore).usuario as Usuario
 
@@ -87,7 +85,12 @@ function createComprobantes({ consumos }: CreateTXTArgs) {
 function createAlicuotas({ consumos }: CreateTXTArgs) {
   const text = consumos
     .map((consumo) => {
-      let renglon = TIPO_DE_COMPROBANTE + PUNTO_DE_VENTA + NRO_COMPROBANTE
+      let renglon = TIPO_DE_COMPROBANTE + PUNTO_DE_VENTA
+
+      const nroComprobante = (consumo.nro_comprobante ?? 0)
+        .toString()
+        .padStart(NRO_COMPROBANTE_LENGTH, '0')
+      renglon += nroComprobante
 
       const importeNeto = Math.trunc(round((consumo.precio_final ?? 0) / 1.21) * 100)
       const importeNetoGravado = importeNeto.toString().padStart(15, '0')
