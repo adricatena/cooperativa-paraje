@@ -1,4 +1,5 @@
 import { isSuperAdminOrMoreCollectionAccess } from '@/hooks/collection-access'
+import { isDevFieldAccess } from '@/hooks/field-access'
 import { APIError, type GlobalConfig } from 'payload'
 
 export const Variables: GlobalConfig = {
@@ -125,6 +126,30 @@ export const Variables: GlobalConfig = {
       },
       min: 1,
       required: true,
+    },
+    {
+      type: 'number',
+      name: 'nro_comprobante_inicial',
+      label: 'Numero de Comprobante inicial',
+      min: 1,
+      defaultValue: 1,
+      access: {
+        create: isDevFieldAccess,
+        read: isDevFieldAccess,
+        update: isDevFieldAccess,
+      },
+    },
+    {
+      type: 'number',
+      name: 'ultimo_nro_comprobante_usado',
+      label: 'Ultimo Numero de Comprobante usado',
+      min: 1,
+      defaultValue: 1,
+      access: {
+        create: isDevFieldAccess,
+        read: isDevFieldAccess,
+        update: isDevFieldAccess,
+      },
     },
   ],
 }

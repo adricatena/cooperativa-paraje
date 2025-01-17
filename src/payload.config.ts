@@ -31,6 +31,12 @@ export default buildConfig({
       logout: {
         Button: '/components/logout-button#LogoutButton',
       },
+      views: {
+        exportRegistros: {
+          path: '/consumos/exportar-registros',
+          Component: '/views/export-registros/index',
+        },
+      },
     },
     theme: 'light',
     meta: {

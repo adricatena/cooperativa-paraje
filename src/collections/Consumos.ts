@@ -326,7 +326,7 @@ export const Consumos: CollectionConfig = {
     hideAPIURL: process.env.NODE_ENV === 'production',
     defaultColumns: ['titulo', 'estado', 'periodo', 'medidor', 'lectura'],
     components: {
-      beforeListTable: ['/components/exportar-tabla/exportar-tabla-consumos#ExportarTablaConsumos'],
+      beforeListTable: ['/components/before-list-table-consumos'],
       views: {
         edit: {
           default: {
@@ -448,7 +448,7 @@ export const Consumos: CollectionConfig = {
       unique: true,
       admin: {
         readOnly: true,
-        condition: (data) => Boolean(data?.id),
+        condition: (data) => data?.estado === 'PAGADO',
         disableListColumn: true,
         disableListFilter: true,
       },

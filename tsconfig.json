@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
-    "lib": ["DOM", "DOM.Iterable", "ES2022"],
+    "lib": ["DOM", "DOM.Iterable", "ES2024"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -22,7 +22,7 @@
       "@/*": ["./src/*"],
       "@payload-config": ["./src/payload.config.ts"]
     },
-    "target": "ES2022",
+    "target": "ES2024",
     "verbatimModuleSyntax": true
   },
   "include": [

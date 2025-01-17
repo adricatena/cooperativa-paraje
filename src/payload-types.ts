@@ -401,6 +401,8 @@ export interface Variable {
    * Porcentaje de interes mensual a aplicar luego del ultimo vencimiento
    */
   interes_mensual: number;
+  nro_comprobante_inicial?: number | null;
+  ultimo_nro_comprobante_usado?: number | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -416,6 +418,8 @@ export interface VariablesSelect<T extends boolean = true> {
   consumo_base?: T;
   precio_base?: T;
   interes_mensual?: T;
+  nro_comprobante_inicial?: T;
+  ultimo_nro_comprobante_usado?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

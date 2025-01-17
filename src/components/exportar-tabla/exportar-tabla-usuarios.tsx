@@ -1,9 +1,13 @@
 'use client'
 import type { Usuario } from '@/payload-types'
 import { USUARIOS_COLUMNS, USUARIOS_DATOSPERSONALES_COLUMNS } from '@/utils/usuarios'
+import { useAuth } from '@payloadcms/ui'
 import { ExportarTabla } from '.'
 
 export function ExportarTablaUsuarios() {
+  const { user } = useAuth()
+  if (user?.rol === 'CLIENTE') return null
+
   function mapData(usuarios: Usuario[]) {
     const mappedDocs = usuarios.map((usario) => {
       const mappedDoc: any = {}

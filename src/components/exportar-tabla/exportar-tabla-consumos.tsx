@@ -1,9 +1,13 @@
 'use client'
 import type { Consumo, Medidore } from '@/payload-types'
 import { COLUMNS, COLUMNS_FACTURACION } from '@/utils/consumos'
+import { useAuth } from '@payloadcms/ui'
 import { ExportarTabla } from '.'
 
 export function ExportarTablaConsumos() {
+  const { user } = useAuth()
+  if (user?.rol === 'CLIENTE') return null
+
   function mapData(consumos: Consumo[]) {
     const mappedDocs = consumos.map((consumo) => {
       const mappedDoc: { [key: string]: any } = {}

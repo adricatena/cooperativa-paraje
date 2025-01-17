@@ -66,6 +66,11 @@ export const notificacionPagoEndpoint: Endpoint = {
         return new Response('El pago no esta aprobado', { status: 400 })
       }
 
+      // leer de variables globales el ultimo nro de comprobante usado, aumentarlo en 1, actualizar el consumo y actualizar la variable global
+      const { ultimo_nro_comprobante_usado = 1 } = await req.payload.findGlobal({
+        slug: 'variables',
+      })
+
       const { consumo_id, precio_final, meses_vencido } = payment.metadata
 
       await req.payload.update({
@@ -80,6 +85,13 @@ export const notificacionPagoEndpoint: Endpoint = {
             fecha_pago: dayjs().toISOString(),
           },
           precio_final,
+          nro_comprobante: (ultimo_nro_comprobante_usado ?? 0) + 1,
+        },
+      })
+      await req.payload.updateGlobal({
+        slug: 'variables',
+        data: {
+          ultimo_nro_comprobante_usado: (ultimo_nro_comprobante_usado ?? 0) + 1,
         },
       })
 
