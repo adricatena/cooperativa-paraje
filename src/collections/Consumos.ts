@@ -150,7 +150,7 @@ const beforeChange: CollectionBeforeChangeHook<Consumo> = async ({ data, req, op
         precio_segundo_vencimiento,
       },
       consumo_real,
-      nro_comprobante: Math.trunc(Date.now() / 1000),
+      // nro_comprobante: Math.trunc(Date.now() / 1000),
     }
   }
 }
@@ -326,7 +326,7 @@ export const Consumos: CollectionConfig = {
     hideAPIURL: process.env.NODE_ENV === 'production',
     defaultColumns: ['titulo', 'estado', 'periodo', 'medidor', 'lectura'],
     components: {
-      beforeListTable: ['/components/before-list-table-consumos'],
+      beforeListTable: ['/components/before-list-table-consumos#BeforeListTableConsumos'],
       views: {
         edit: {
           default: {

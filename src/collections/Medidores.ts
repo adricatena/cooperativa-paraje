@@ -57,9 +57,8 @@ export const Medidores: CollectionConfig = {
       'usuario',
     ],
     components: {
-      beforeListTable: [
-        '/components/exportar-tabla/exportar-tabla-medidores#ExportarTablaMedidores',
-      ],
+      beforeListTable: ['/components/before-list-table-medidores#BeforeListTableMedidores'],
+      // afterList: ['/components/after-list-medidores#AfterListMedidores'],
     },
   },
   access: {

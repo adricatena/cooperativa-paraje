@@ -20,6 +20,7 @@
     "@payloadcms/payload-cloud": "3.17.1",
     "@payloadcms/richtext-lexical": "3.17.1",
     "@react-pdf/renderer": "4.1.6",
+    "client-only": "0.0.1",
     "cross-env": "7.0.3",
     "dayjs": "1.11.13",
     "graphql": "16.10.0",
@@ -28,6 +29,7 @@
     "payload": "3.17.1",
     "react": "19.0.0",
     "react-dom": "19.0.0",
+    "server-only": "0.0.1",
     "sharp": "0.33.5"
   },
   "devDependencies": {

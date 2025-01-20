@@ -3,11 +3,7 @@ import { Gutter } from '@payloadcms/ui'
 import type { AdminViewProps } from 'payload'
 import { ClientExportRegistros } from './client-export-registros'
 
-export default async function ExportRegistros({
-  initPageResult,
-  params,
-  searchParams,
-}: AdminViewProps) {
+export async function ExportRegistros({ initPageResult, params, searchParams }: AdminViewProps) {
   const { payload } = initPageResult.req
   const { docs: consumos } = await payload.find({
     collection: 'consumos',

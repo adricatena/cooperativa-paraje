@@ -34,7 +34,7 @@ export default buildConfig({
       views: {
         exportRegistros: {
           path: '/consumos/exportar-registros',
-          Component: '/views/export-registros/index',
+          Component: '/views/export-registros#ExportRegistros',
         },
       },
     },
