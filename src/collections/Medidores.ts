@@ -58,7 +58,6 @@ export const Medidores: CollectionConfig = {
     ],
     components: {
       beforeListTable: ['/components/before-list-table-medidores#BeforeListTableMedidores'],
-      // afterList: ['/components/after-list-medidores#AfterListMedidores'],
     },
   },
   access: {
