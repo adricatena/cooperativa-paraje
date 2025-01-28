@@ -1,5 +1,6 @@
 // storage-adapter-import-placeholder
 import { mongooseAdapter } from '@payloadcms/db-mongodb'
+import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
 import { payloadCloudPlugin } from '@payloadcms/payload-cloud'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import path from 'path'
@@ -12,9 +13,24 @@ import { Medidores } from './collections/Medidores'
 import { Usuarios } from './collections/Usuarios'
 import { notificacionPagoEndpoint } from './endpoints/notificacion-pago'
 import { Variables } from './globals/Variables'
+import { emailNuevoConsumo } from './tasks/email-nuevo-consumo'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
+
+const email = nodemailerAdapter({
+  defaultFromAddress: process.env.EMAIL_FROM_ADDRESS ?? '',
+  defaultFromName: process.env.EMAIL_FROM_NAME ?? '',
+  // Nodemailer transportOptions
+  transportOptions: {
+    host: process.env.EMAIL_SMTP_HOST,
+    port: process.env.EMAIL_SMTP_PORT,
+    auth: {
+      user: process.env.EMAIL_AUTH_USER,
+      pass: process.env.EMAIL_AUTH_PASS,
+    },
+  },
+})
 
 export default buildConfig({
   admin: {
@@ -63,4 +79,8 @@ export default buildConfig({
     supportedLanguages: { es },
   },
   endpoints: [notificacionPagoEndpoint],
+  email,
+  jobs: {
+    tasks: [emailNuevoConsumo],
+  },
 })

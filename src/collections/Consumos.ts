@@ -16,6 +16,7 @@ import MercadoPagoConfig, { Preference } from 'mercadopago'
 import {
   APIError,
   type Access,
+  type CollectionAfterChangeHook,
   type CollectionBeforeChangeHook,
   type CollectionBeforeDeleteHook,
   type CollectionBeforeReadHook,
@@ -152,6 +153,43 @@ const beforeChange: CollectionBeforeChangeHook<Consumo> = async ({ data, req, op
       consumo_real,
       // nro_comprobante: Math.trunc(Date.now() / 1000),
     }
+  }
+}
+const afterChange: CollectionAfterChangeHook<Consumo> = async ({ doc, operation, req }) => {
+  if (operation === 'create') {
+    console.log(doc)
+
+    let { medidor } = doc
+    if (typeof medidor === 'string') {
+      medidor = await req.payload.findByID({
+        collection: 'medidores',
+        id: medidor,
+      })
+    }
+
+    let usuario = medidor?.usuario
+    if (typeof usuario === 'string') {
+      usuario = await req.payload.findByID({
+        collection: 'usuarios',
+        id: usuario,
+      })
+    }
+
+    /* const jobEmailNuevoConsumo = await req.payload.jobs.queue({
+      task: 'email-nuevo-consumo',
+      input: { to: usuario?.email ?? '' },
+    })
+    req.payload.jobs.runByID({
+      id: jobEmailNuevoConsumo.id,
+    }) */
+    req.payload.jobs.queue({
+      task: 'email-nuevo-consumo',
+      input: { to: usuario?.email ?? '', consumoId: doc.id },
+      queue: 'enviar-mail',
+    })
+    req.payload.jobs.run({
+      queue: 'enviar-mail',
+    })
   }
 }
 const beforeDelete: CollectionBeforeDeleteHook = async ({ req, id }) => {
@@ -351,6 +389,7 @@ export const Consumos: CollectionConfig = {
   },
   hooks: {
     beforeChange: [beforeChange],
+    afterChange: [afterChange],
     beforeDelete: [beforeDelete],
     beforeRead: [beforeRead],
   },
