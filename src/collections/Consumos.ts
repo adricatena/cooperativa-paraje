@@ -157,8 +157,6 @@ const beforeChange: CollectionBeforeChangeHook<Consumo> = async ({ data, req, op
 }
 const afterChange: CollectionAfterChangeHook<Consumo> = async ({ doc, operation, req }) => {
   if (operation === 'create') {
-    console.log(doc)
-
     let { medidor } = doc
     if (typeof medidor === 'string') {
       medidor = await req.payload.findByID({

@@ -17,7 +17,6 @@ export const emailNuevoConsumo: TaskConfig = {
       id: input.consumoId,
       depth: 3,
     })
-    console.log(consumo)
 
     const medidor = consumo.medidor as Medidore
     const usuario = medidor.usuario as Usuario
