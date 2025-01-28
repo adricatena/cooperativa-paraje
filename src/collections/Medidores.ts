@@ -1,10 +1,10 @@
+import { isAdminOrMoreCollectionAccess, isDevCollectionAccess } from '@/access/collection-access'
 import { fieldActivo } from '@/fields/activo'
 import { fieldTitulo } from '@/fields/titulo'
-import { isAdminOrMoreCollectionAccess, isDevCollectionAccess } from '@/hooks/collection-access'
 import type { Medidore } from '@/payload-types'
 import type { Access, CollectionBeforeChangeHook, CollectionConfig } from 'payload'
 
-// COLLECTION ACCESS
+// #region COLLECTION ACCESS
 const isAdminOrMyMeter: Access<Medidore> = async ({ req }) => {
   const roleIsEnough =
     req.user?.desarrollador ||
@@ -18,8 +18,9 @@ const isAdminOrMyMeter: Access<Medidore> = async ({ req }) => {
     },
   }
 }
+// #endregion
 
-// COLLECTION HOOKS
+// #region COLLECTION HOOKS
 const beforeChange: CollectionBeforeChangeHook<Medidore> = async ({ data, req }) => {
   let { usuario } = data
   if (typeof usuario === 'string') {
@@ -38,6 +39,7 @@ const beforeChange: CollectionBeforeChangeHook<Medidore> = async ({ data, req })
     titulo: `${data.numero_medidor} - ${tituloCliente} - ${data.direccion}`,
   }
 }
+// #endregion
 
 export const Medidores: CollectionConfig = {
   slug: 'medidores',
@@ -130,6 +132,7 @@ export const Medidores: CollectionConfig = {
         ],
       },
     },
+    { type: 'textarea', name: 'observaciones', label: 'Observaciones' },
     fieldActivo({}),
   ],
 }

@@ -9,6 +9,7 @@ import { es } from 'payload/i18n/es'
 import sharp from 'sharp'
 import { fileURLToPath } from 'url'
 import { Consumos } from './collections/Consumos'
+import { GastosExtraordinarios } from './collections/GastosExtraordinarios'
 import { Medidores } from './collections/Medidores'
 import { Usuarios } from './collections/Usuarios'
 import { notificacionPagoEndpoint } from './endpoints/notificacion-pago'
@@ -25,6 +26,7 @@ const email = nodemailerAdapter({
   transportOptions: {
     host: process.env.EMAIL_SMTP_HOST,
     port: process.env.EMAIL_SMTP_PORT,
+    secure: true,
     auth: {
       user: process.env.EMAIL_AUTH_USER,
       pass: process.env.EMAIL_AUTH_PASS,
@@ -59,7 +61,7 @@ export default buildConfig({
       titleSuffix: ' - Cooperativa Paraje La Virgen',
     },
   },
-  collections: [Usuarios, Medidores, Consumos],
+  collections: [Usuarios, Medidores, Consumos, GastosExtraordinarios],
   globals: [Variables],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',

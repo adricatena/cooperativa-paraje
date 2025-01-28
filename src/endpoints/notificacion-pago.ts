@@ -1,7 +1,61 @@
 import { createHmac } from 'crypto'
 import dayjs from 'dayjs'
 import MercadoPagoConfig, { Payment } from 'mercadopago'
-import type { Endpoint } from 'payload'
+import type { Endpoint, PayloadRequest } from 'payload'
+
+async function processPagoConsumo(args: {
+  req: PayloadRequest
+  metadata: any
+  id_pago_mp: string
+}) {
+  const { req, metadata, id_pago_mp } = args
+  // leer de variables globales el ultimo nro de comprobante usado, aumentarlo en 1, actualizar el consumo y actualizar la variable global
+  const { ultimo_nro_comprobante_usado = 1 } = await req.payload.findGlobal({
+    slug: 'variables',
+  })
+
+  const { consumo_id, precio_final, meses_vencido } = metadata
+
+  await req.payload.update({
+    collection: 'consumos',
+    id: consumo_id,
+    data: {
+      estado: 'PAGADO',
+      datos_facturacion: {
+        id_pago_mp,
+        precio_final,
+        meses_vencido,
+        fecha_pago: dayjs().toISOString(),
+      },
+      precio_final,
+      nro_comprobante: (ultimo_nro_comprobante_usado ?? 0) + 1,
+    },
+  })
+  await req.payload.updateGlobal({
+    slug: 'variables',
+    data: {
+      ultimo_nro_comprobante_usado: (ultimo_nro_comprobante_usado ?? 0) + 1,
+    },
+  })
+}
+
+async function processPagoExtraordinario(args: {
+  req: PayloadRequest
+  metadata: any
+  id_pago_mp: string
+}) {
+  const { req, metadata, id_pago_mp } = args
+  // obtener id de pago de metadata y marcar el pago como pagado
+  const { gasto_id } = metadata
+  await req.payload.update({
+    collection: 'gastos_extraordinarios',
+    id: gasto_id,
+    data: {
+      estado: 'PAGADO',
+      id_pago_mp,
+    },
+  })
+}
 
 export const notificacionPagoEndpoint: Endpoint = {
   path: '/notificaciones/pagos',
@@ -66,34 +120,21 @@ export const notificacionPagoEndpoint: Endpoint = {
         return new Response('El pago no esta aprobado', { status: 400 })
       }
 
-      // leer de variables globales el ultimo nro de comprobante usado, aumentarlo en 1, actualizar el consumo y actualizar la variable global
-      const { ultimo_nro_comprobante_usado = 1 } = await req.payload.findGlobal({
-        slug: 'variables',
-      })
+      if (payment.metadata.tipo === 'CONSUMO') {
+        await processPagoConsumo({
+          req,
+          metadata: payment.metadata,
+          id_pago_mp: id,
+        })
+      }
 
-      const { consumo_id, precio_final, meses_vencido } = payment.metadata
-
-      await req.payload.update({
-        collection: 'consumos',
-        id: consumo_id,
-        data: {
-          estado: 'PAGADO',
-          datos_facturacion: {
-            id_pago_mp: id,
-            precio_final,
-            meses_vencido,
-            fecha_pago: dayjs().toISOString(),
-          },
-          precio_final,
-          nro_comprobante: (ultimo_nro_comprobante_usado ?? 0) + 1,
-        },
-      })
-      await req.payload.updateGlobal({
-        slug: 'variables',
-        data: {
-          ultimo_nro_comprobante_usado: (ultimo_nro_comprobante_usado ?? 0) + 1,
-        },
-      })
+      if (payment.metadata.tipo === 'GASTO_EXTRA') {
+        await processPagoExtraordinario({
+          req,
+          metadata: payment.metadata,
+          id_pago_mp: id,
+        })
+      }
 
       return new Response('Notificacion recibida', { status: 200 })
     } catch (error) {

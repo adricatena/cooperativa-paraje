@@ -14,6 +14,7 @@ export interface Config {
     usuarios: Usuario;
     medidores: Medidore;
     consumos: Consumo;
+    gastos_extraordinarios: GastosExtraordinario;
     'payload-jobs': PayloadJob;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -31,6 +32,7 @@ export interface Config {
     usuarios: UsuariosSelect<false> | UsuariosSelect<true>;
     medidores: MedidoresSelect<false> | MedidoresSelect<true>;
     consumos: ConsumosSelect<false> | ConsumosSelect<true>;
+    gastos_extraordinarios: GastosExtraordinariosSelect<false> | GastosExtraordinariosSelect<true>;
     'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -119,6 +121,7 @@ export interface Usuario {
   confirmado?: boolean | null;
   activo?: boolean | null;
   desarrollador?: boolean | null;
+  observaciones?: string | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -154,6 +157,7 @@ export interface Medidore {
    */
   numero_medidor: string;
   usuario?: (string | null) | Usuario;
+  observaciones?: string | null;
   activo?: boolean | null;
   updatedAt: string;
   createdAt: string;
@@ -173,7 +177,7 @@ export interface Consumo {
    * Fecha en que se realizo la lectura
    */
   fecha_lectura: string;
-  estado?: ('ADEUDADO' | 'PAGADO') | null;
+  estado: 'ADEUDADO' | 'PAGADO';
   /**
    * Periodo (numero de mes) correspondiente a la lectura
    */
@@ -198,6 +202,22 @@ export interface Consumo {
   precio_final?: number | null;
   consumo_real?: number | null;
   titulo: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "gastos_extraordinarios".
+ */
+export interface GastosExtraordinario {
+  id: string;
+  medidor: string | Medidore;
+  tipo: 'costo_conexion' | 'costo_reconexion' | 'costo_cambio_titular' | 'Extensión de red' | 'Otros';
+  monto?: number | null;
+  estado: 'ADEUDADO' | 'PAGADO';
+  observaciones?: string | null;
+  titulo: string;
+  id_pago_mp?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -313,6 +333,10 @@ export interface PayloadLockedDocument {
         value: string | Consumo;
       } | null)
     | ({
+        relationTo: 'gastos_extraordinarios';
+        value: string | GastosExtraordinario;
+      } | null)
+    | ({
         relationTo: 'payload-jobs';
         value: string | PayloadJob;
       } | null);
@@ -379,6 +403,7 @@ export interface UsuariosSelect<T extends boolean = true> {
   confirmado?: T;
   activo?: T;
   desarrollador?: T;
+  observaciones?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -400,6 +425,7 @@ export interface MedidoresSelect<T extends boolean = true> {
   lectura_inicial?: T;
   numero_medidor?: T;
   usuario?: T;
+  observaciones?: T;
   activo?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -436,6 +462,21 @@ export interface ConsumosSelect<T extends boolean = true> {
   precio_final?: T;
   consumo_real?: T;
   titulo?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "gastos_extraordinarios_select".
+ */
+export interface GastosExtraordinariosSelect<T extends boolean = true> {
+  medidor?: T;
+  tipo?: T;
+  monto?: T;
+  estado?: T;
+  observaciones?: T;
+  titulo?: T;
+  id_pago_mp?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -536,6 +577,18 @@ export interface Variable {
    * Porcentaje de interes mensual a aplicar luego del ultimo vencimiento
    */
   interes_mensual: number;
+  /**
+   * Ingrese el monto a cobrar para conexión como Gasto Extraordinario
+   */
+  costo_conexion: number;
+  /**
+   * Ingrese el monto a cobrar para reconexión como Gasto Extraordinario
+   */
+  costo_reconexion: number;
+  /**
+   * Ingrese el monto a cobrar para cambio de titular como Gasto Extraordinario
+   */
+  costo_cambio_titular: number;
   nro_comprobante_inicial?: number | null;
   ultimo_nro_comprobante_usado?: number | null;
   updatedAt?: string | null;
@@ -553,6 +606,9 @@ export interface VariablesSelect<T extends boolean = true> {
   consumo_base?: T;
   precio_base?: T;
   interes_mensual?: T;
+  costo_conexion?: T;
+  costo_reconexion?: T;
+  costo_cambio_titular?: T;
   nro_comprobante_inicial?: T;
   ultimo_nro_comprobante_usado?: T;
   updatedAt?: T;
@@ -565,7 +621,6 @@ export interface VariablesSelect<T extends boolean = true> {
  */
 export interface TaskEmailNuevoConsumo {
   input: {
-    to: string;
     consumoId: string;
   };
   output: {

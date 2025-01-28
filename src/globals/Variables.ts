@@ -1,5 +1,10 @@
-import { isSuperAdminOrMoreCollectionAccess } from '@/hooks/collection-access'
-import { isDevFieldAccess } from '@/hooks/field-access'
+import { isSuperAdminOrMoreCollectionAccess } from '@/access/collection-access'
+import { isDevFieldAccess } from '@/access/field-access'
+import {
+  CAMBIO_TITULAR_KEY,
+  NUEVA_CONEXION_KEY,
+  RECONEXION_KEY,
+} from '@/data/gastos_extraordinarios'
 import { APIError, type GlobalConfig } from 'payload'
 
 export const Variables: GlobalConfig = {
@@ -126,6 +131,39 @@ export const Variables: GlobalConfig = {
       },
       min: 1,
       required: true,
+    },
+    {
+      type: 'number',
+      name: NUEVA_CONEXION_KEY,
+      label: 'Costo de Conexión',
+      required: true,
+      min: 0,
+      defaultValue: 1,
+      admin: {
+        description: 'Ingrese el monto a cobrar para conexión como Gasto Extraordinario',
+      },
+    },
+    {
+      type: 'number',
+      name: RECONEXION_KEY,
+      label: 'Costo de Reconexión',
+      required: true,
+      min: 0,
+      defaultValue: 1,
+      admin: {
+        description: 'Ingrese el monto a cobrar para reconexión como Gasto Extraordinario',
+      },
+    },
+    {
+      type: 'number',
+      name: CAMBIO_TITULAR_KEY,
+      label: 'Costo de Cambio de Titular',
+      required: true,
+      min: 0,
+      defaultValue: 1,
+      admin: {
+        description: 'Ingrese el monto a cobrar para cambio de titular como Gasto Extraordinario',
+      },
     },
     {
       type: 'number',

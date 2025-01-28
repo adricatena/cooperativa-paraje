@@ -1,11 +1,11 @@
-import { fieldActivo } from '@/fields/activo'
-import { fieldTitulo } from '@/fields/titulo'
-import { isAdminOrMoreCollectionAccess, isDevCollectionAccess } from '@/hooks/collection-access'
+import { isAdminOrMoreCollectionAccess, isDevCollectionAccess } from '@/access/collection-access'
 import {
   isAdminOrMoreFieldAccess,
   isDevFieldAccess,
   isSuperAdminOrMoreFieldAccess,
-} from '@/hooks/field-access'
+} from '@/access/field-access'
+import { fieldActivo } from '@/fields/activo'
+import { fieldTitulo } from '@/fields/titulo'
 import type { Usuario } from '@/payload-types'
 import type {
   Access,
@@ -19,14 +19,15 @@ import type {
 } from 'payload'
 import { date, number, text } from 'payload/shared'
 
-// COLLECTION ACCESS
+// #region COLLECTION ACCESS
 const isAdminOrMeCollectionAccess: Access<Usuario> = ({ req, id }) =>
   req.user?.desarrollador ||
   req.user?.rol === 'SUPERADMINISTRADOR' ||
   req.user?.rol === 'ADMINISTRADOR' ||
   req.user?.id === id
+// #endregion
 
-// COLLECTION HOOKS
+// #region COLLECTION HOOKS
 const beforeChange: CollectionBeforeChangeHook<Usuario> = ({ data }) => ({
   ...data,
   titulo:
@@ -34,8 +35,9 @@ const beforeChange: CollectionBeforeChangeHook<Usuario> = ({ data }) => ({
       ? `${data?.datos_personales?.cuit} - ${data.datos_personales?.nombre} ${data.datos_personales?.apellido}`
       : data.email,
 })
+// #endregion
 
-// FIELD ACCESS
+// #region FIELD ACCESS
 const createRoleFieldAccess: FieldAccess<Usuario, Usuario> = ({ req, siblingData }) => {
   if (req.user?.desarrollador || req.user?.rol === 'SUPERADMINISTRADOR') {
     return true
@@ -48,8 +50,9 @@ const createRoleFieldAccess: FieldAccess<Usuario, Usuario> = ({ req, siblingData
 
   return false
 }
+// #endregion
 
-// FIELD VALIDATION
+// #region FIELD VALIDATION
 const textValidation: Validate<any, any, any, TextField> = async (value, options) => {
   if (options?.data?.rol !== 'CLIENTE') return true
   return await text(value, options)
@@ -62,6 +65,7 @@ const dateValidation: Validate<any, any, any, DateField> = async (value, options
   if (options?.data?.rol !== 'CLIENTE') return true
   return await date(value, options)
 }
+// #endregion
 
 export const Usuarios: CollectionConfig = {
   slug: 'usuarios',
@@ -238,6 +242,16 @@ export const Usuarios: CollectionConfig = {
         position: 'sidebar',
         disableListColumn: true,
         disableListFilter: true,
+      },
+    },
+    {
+      type: 'textarea',
+      name: 'observaciones',
+      label: 'Observaciones',
+      access: {
+        create: isAdminOrMoreFieldAccess,
+        read: isAdminOrMoreFieldAccess,
+        update: isAdminOrMoreFieldAccess,
       },
     },
   ],

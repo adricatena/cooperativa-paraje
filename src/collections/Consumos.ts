@@ -1,21 +1,21 @@
-import { fieldTitulo } from '@/fields/titulo'
 import {
   isAdminOrMoreCollectionAccess,
+  isAdminOrMyMeterCollectionAccess,
   isDevCollectionAccess,
   isSuperAdminOrMoreCollectionAccess,
-} from '@/hooks/collection-access'
+} from '@/access/collection-access'
 import {
   isAdminOrMoreFieldAccess,
   isDevFieldAccess,
   isSuperAdminOrMoreFieldAccess,
-} from '@/hooks/field-access'
+} from '@/access/field-access'
+import { fieldTitulo } from '@/fields/titulo'
 import type { Consumo } from '@/payload-types'
 import { round } from '@/utils/math'
 import dayjs from 'dayjs'
 import MercadoPagoConfig, { Preference } from 'mercadopago'
 import {
   APIError,
-  type Access,
   type CollectionAfterChangeHook,
   type CollectionBeforeChangeHook,
   type CollectionBeforeDeleteHook,
@@ -26,22 +26,7 @@ import {
 
 const PERIODO_FORMAT = 'YYYY/MM'
 
-// COLLECTION ACCESS
-const isAdminOrMe: Access<Consumo> = async ({ req }) => {
-  const roleIsEnough =
-    req.user?.desarrollador ||
-    req.user?.rol === 'SUPERADMINISTRADOR' ||
-    req.user?.rol === 'ADMINISTRADOR'
-  if (roleIsEnough) return true
-
-  return {
-    'medidor.usuario.email': {
-      equals: req.user?.email,
-    },
-  }
-}
-
-// COLLECTION HOOKS
+// #region COLLECTION HOOKS
 const beforeChange: CollectionBeforeChangeHook<Consumo> = async ({ data, req, operation }) => {
   if (operation === 'create') {
     let { medidor } = data
@@ -151,43 +136,18 @@ const beforeChange: CollectionBeforeChangeHook<Consumo> = async ({ data, req, op
         precio_segundo_vencimiento,
       },
       consumo_real,
-      // nro_comprobante: Math.trunc(Date.now() / 1000),
     }
   }
 }
 const afterChange: CollectionAfterChangeHook<Consumo> = async ({ doc, operation, req }) => {
   if (operation === 'create') {
-    let { medidor } = doc
-    if (typeof medidor === 'string') {
-      medidor = await req.payload.findByID({
-        collection: 'medidores',
-        id: medidor,
+    req.payload.jobs
+      .queue({
+        task: 'email-nuevo-consumo',
+        input: { consumoId: doc.id },
+        queue: 'enviar-mail',
       })
-    }
-
-    let usuario = medidor?.usuario
-    if (typeof usuario === 'string') {
-      usuario = await req.payload.findByID({
-        collection: 'usuarios',
-        id: usuario,
-      })
-    }
-
-    /* const jobEmailNuevoConsumo = await req.payload.jobs.queue({
-      task: 'email-nuevo-consumo',
-      input: { to: usuario?.email ?? '' },
-    })
-    req.payload.jobs.runByID({
-      id: jobEmailNuevoConsumo.id,
-    }) */
-    req.payload.jobs.queue({
-      task: 'email-nuevo-consumo',
-      input: { to: usuario?.email ?? '', consumoId: doc.id },
-      queue: 'enviar-mail',
-    })
-    req.payload.jobs.run({
-      queue: 'enviar-mail',
-    })
+      .then((queue) => req.payload.jobs.runByID({ id: queue.id }))
   }
 }
 const beforeDelete: CollectionBeforeDeleteHook = async ({ req, id }) => {
@@ -231,8 +191,9 @@ const beforeRead: CollectionBeforeReadHook<Consumo> = async ({ doc, req }) => {
 
   return { ...doc, precio_final: -1 * round(precio) }
 }
+// #endregion
 
-// ENDPOINTS
+// #region ENDPOINTS
 const crearReferenciaMP: Endpoint = {
   path: '/:id/preferencia',
   method: 'post',
@@ -336,6 +297,7 @@ const crearReferenciaMP: Endpoint = {
             consumo_id: consumo.id,
             precio_final: unit_price,
             meses_vencido,
+            tipo: 'CONSUMO',
           },
           back_urls: {
             success: process.env.MP_SUCCESS_BACK_URL,
@@ -350,6 +312,7 @@ const crearReferenciaMP: Endpoint = {
     }
   },
 }
+// #endregion
 
 export const Consumos: CollectionConfig = {
   slug: 'consumos',
@@ -381,7 +344,7 @@ export const Consumos: CollectionConfig = {
   },
   access: {
     create: isAdminOrMoreCollectionAccess,
-    read: isAdminOrMe,
+    read: isAdminOrMyMeterCollectionAccess,
     update: isDevCollectionAccess,
     delete: isSuperAdminOrMoreCollectionAccess,
   },
@@ -451,6 +414,7 @@ export const Consumos: CollectionConfig = {
       type: 'select',
       options: ['ADEUDADO', 'PAGADO'],
       defaultValue: 'ADEUDADO',
+      required: true,
       access: {
         create: isSuperAdminOrMoreFieldAccess,
         read: () => true,

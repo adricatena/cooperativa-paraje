@@ -4,10 +4,7 @@ import type { TaskConfig } from 'payload'
 export const emailNuevoConsumo: TaskConfig = {
   slug: 'email-nuevo-consumo',
   retries: 3,
-  inputSchema: [
-    { name: 'to', type: 'text', required: true },
-    { name: 'consumoId', type: 'text', required: true },
-  ],
+  inputSchema: [{ name: 'consumoId', type: 'text', required: true }],
   outputSchema: [{ name: 'mensaje', type: 'text', required: false }],
   handler: async (args) => {
     const { req, input } = args
@@ -24,7 +21,7 @@ export const emailNuevoConsumo: TaskConfig = {
     const [year, mes] = consumo.periodo_normalizado?.split('/') ?? []
 
     await req.payload.sendEmail({
-      to: input.to,
+      to: usuario.email,
       subject: 'Nuevo consumo cargado',
       html: `
         <div style="font-family: sans-serif; font-size: small">
