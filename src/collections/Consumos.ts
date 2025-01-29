@@ -56,6 +56,34 @@ const beforeChange: CollectionBeforeChangeHook<Consumo> = async ({ data, req, op
 
     const periodo_normalizado = dayjsPeriodo.format(PERIODO_FORMAT)
 
+    // chequear si el medidor tiene algun gasto extraordinario adeudado
+    const { totalDocs } = await req.payload.find({
+      collection: 'gastos_extraordinarios',
+      where: {
+        and: [
+          {
+            medidor: {
+              equals: medidor!.id,
+            },
+          },
+          {
+            estado: {
+              equals: 'ADEUDADO',
+            },
+          },
+        ],
+      },
+      pagination: false,
+    })
+    if (totalDocs > 1) {
+      throw new APIError(
+        'Tiene gastos extraordinarios adeudados, por favor cancele primero cualquier deuda previa.',
+        401,
+        null,
+        true,
+      )
+    }
+
     const consumosRegistrados = await req.payload.find({
       collection: 'consumos',
       where: {

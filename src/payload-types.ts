@@ -54,6 +54,7 @@ export interface Config {
   jobs: {
     tasks: {
       'email-nuevo-consumo': TaskEmailNuevoConsumo;
+      'email-nuevo-gasto-extra': TaskEmailNuevoGastoExtra;
       inline: {
         input: unknown;
         output: unknown;
@@ -273,7 +274,7 @@ export interface PayloadJob {
     | {
         executedAt: string;
         completedAt: string;
-        taskSlug: 'inline' | 'email-nuevo-consumo';
+        taskSlug: 'inline' | 'email-nuevo-consumo' | 'email-nuevo-gasto-extra';
         taskID: string;
         input?:
           | {
@@ -306,7 +307,7 @@ export interface PayloadJob {
         id?: string | null;
       }[]
     | null;
-  taskSlug?: ('inline' | 'email-nuevo-consumo') | null;
+  taskSlug?: ('inline' | 'email-nuevo-consumo' | 'email-nuevo-gasto-extra') | null;
   queue?: string | null;
   waitUntil?: string | null;
   processing?: boolean | null;
@@ -622,6 +623,18 @@ export interface VariablesSelect<T extends boolean = true> {
 export interface TaskEmailNuevoConsumo {
   input: {
     consumoId: string;
+  };
+  output: {
+    mensaje?: string | null;
+  };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TaskEmail-nuevo-gasto-extra".
+ */
+export interface TaskEmailNuevoGastoExtra {
+  input: {
+    gastoId: string;
   };
   output: {
     mensaje?: string | null;

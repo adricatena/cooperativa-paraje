@@ -16,6 +16,7 @@ import { round } from '@/utils/math'
 import MercadoPagoConfig, { Preference } from 'mercadopago'
 import {
   APIError,
+  type CollectionAfterChangeHook,
   type CollectionBeforeChangeHook,
   type CollectionConfig,
   type Endpoint,
@@ -28,7 +29,7 @@ const TIPO_OPTIONS = [
   { value: 'Extensión de red', label: 'Extensión de red' },
   { value: 'Otros', label: 'Otros' },
 ]
-const getTipoGastoLabel = (value: string) =>
+export const getTipoGastoLabel = (value: string) =>
   TIPO_OPTIONS.find((tipo) => tipo.value === value)?.label ?? 'Gasto Extraordinario'
 
 // #region COLLECTION HOOKS
@@ -63,6 +64,21 @@ const beforeChange: CollectionBeforeChangeHook<GastosExtraordinario> = async ({ 
     const monto = variables[data.tipo]
 
     return { ...data, monto, titulo }
+  }
+}
+const afterChange: CollectionAfterChangeHook<GastosExtraordinario> = async ({
+  operation,
+  req,
+  doc,
+}) => {
+  if (operation === 'create') {
+    req.payload.jobs
+      .queue({
+        task: 'email-nuevo-gasto-extra',
+        input: { gastoId: doc.id },
+        queue: 'enviar-mail-gasto-extra',
+      })
+      .then((queue) => req.payload.jobs.runByID({ id: queue.id }))
   }
 }
 // #endregion
@@ -170,6 +186,7 @@ export const GastosExtraordinarios: CollectionConfig = {
   },
   hooks: {
     beforeChange: [beforeChange],
+    afterChange: [afterChange],
   },
   endpoints: [crearReferenciaMP],
   fields: [

@@ -15,6 +15,7 @@ import { Usuarios } from './collections/Usuarios'
 import { notificacionPagoEndpoint } from './endpoints/notificacion-pago'
 import { Variables } from './globals/Variables'
 import { emailNuevoConsumo } from './tasks/email-nuevo-consumo'
+import { emailNuevoGastoExtra } from './tasks/email-nuevo-gasto-extra'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -83,6 +84,6 @@ export default buildConfig({
   endpoints: [notificacionPagoEndpoint],
   email,
   jobs: {
-    tasks: [emailNuevoConsumo],
+    tasks: [emailNuevoConsumo, emailNuevoGastoExtra],
   },
 })
