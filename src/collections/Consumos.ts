@@ -319,6 +319,7 @@ const crearReferenciaMP: Endpoint = {
               description: `Pago correspondiente al periodo ${consumo.periodo_normalizado} de la Cooperativa de Agua y Servicios Paraje La Virgen`,
               quantity: 1,
               unit_price,
+              category_id: 'consumo',
             },
           ],
           metadata: {
@@ -329,6 +330,12 @@ const crearReferenciaMP: Endpoint = {
           },
           back_urls: {
             success: process.env.MP_SUCCESS_BACK_URL,
+          },
+          external_reference: consumo.id,
+          payer: {
+            name: req.user?.datos_personales?.nombre ?? 'Nombre Usuario',
+            surname: req.user?.datos_personales?.apellido ?? 'Apellido Usuario',
+            email: req.user?.email ?? 'usuario@cooperativa.com',
           },
         },
       })

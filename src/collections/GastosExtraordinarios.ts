@@ -114,6 +114,14 @@ const crearReferenciaMP: Endpoint = {
       })
     }
 
+    let { usuario } = medidor
+    if (typeof usuario === 'string') {
+      usuario = await req.payload.findByID({
+        collection: 'usuarios',
+        id: usuario,
+      })
+    }
+
     try {
       const unit_price = round(gasto.monto ?? 0)
       const description = `Pago correspondiente al gasto extraordinario en concepto de ${getTipoGastoLabel(gasto.tipo)} de la Cooperativa de Agua y Servicios Paraje La Virgen`
@@ -130,6 +138,7 @@ const crearReferenciaMP: Endpoint = {
               description,
               quantity: 1,
               unit_price,
+              category_id: 'gasto_extra',
             },
           ],
           metadata: {
@@ -139,6 +148,12 @@ const crearReferenciaMP: Endpoint = {
           },
           back_urls: {
             success: process.env.MP_SUCCESS_BACK_URL,
+          },
+          external_reference: gasto.id,
+          payer: {
+            name: usuario?.datos_personales?.nombre ?? 'Nombre Usuario',
+            surname: usuario?.datos_personales?.apellido ?? 'Apellido Usuario',
+            email: usuario?.email ?? 'usuario@cooperativa.com',
           },
         },
       })
