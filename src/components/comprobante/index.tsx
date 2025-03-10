@@ -6,11 +6,10 @@ import { useMemo } from 'react'
 const styles = StyleSheet.create({
   bloque: {
     width: '100%',
-    border: 'solid',
-    borderWidth: 1,
+    borderWidth: '1px',
     borderColor: 'mediumseagreen',
+    borderRadius: '5px',
     color: 'mediumseagreen',
-    borderRadius: 5,
     backgroundColor: 'honeydew',
   },
   titulo: {

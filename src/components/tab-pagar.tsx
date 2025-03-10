@@ -46,9 +46,9 @@ export function TabPagar() {
         const consumosRes = await GET(`/api/consumos/${id}`)
         const consumosData: Consumo = await consumosRes.json()
         consumo.current = consumosData
+        setIsLoading(false)
       } catch (error) {
         console.error(error)
-      } finally {
         setIsLoading(false)
       }
     })()
