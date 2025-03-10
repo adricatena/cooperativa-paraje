@@ -1,6 +1,5 @@
 import { ExportarTablaUsuarios as ExportarTablaUsuarios_d37ac8650395a5340121e8e035f6d94d } from 'src/components/exportar-tabla/exportar-tabla-usuarios'
 import { BeforeListTableMedidores as BeforeListTableMedidores_fb9218e918eeeb1461daa94a3adbfa28 } from 'src/components/before-list-table-medidores'
-import { ComprobanteViewer as ComprobanteViewer_16d50913a5a177ea7caa986823a992af } from 'src/components/comprobante/viewer'
 import { BeforeListTableConsumos as BeforeListTableConsumos_0142d847a97c9ce9afb5411453e0d4c3 } from 'src/components/before-list-table-consumos'
 import { TabPagar as TabPagar_ea3c4e4d8f0a14542eddb07aca6b9f0e } from 'src/components/tab-pagar'
 import { TabPagarExtra as TabPagarExtra_8336cf18a0e130635921d056634a7398 } from 'src/components/tab-pagar-extra'
@@ -11,7 +10,6 @@ import { ExportRegistros as ExportRegistros_b0b6d802a39523a8facb8b426acb35f3 } f
 export const importMap = {
   "/components/exportar-tabla/exportar-tabla-usuarios#ExportarTablaUsuarios": ExportarTablaUsuarios_d37ac8650395a5340121e8e035f6d94d,
   "/components/before-list-table-medidores#BeforeListTableMedidores": BeforeListTableMedidores_fb9218e918eeeb1461daa94a3adbfa28,
-  "/components/comprobante/viewer#ComprobanteViewer": ComprobanteViewer_16d50913a5a177ea7caa986823a992af,
   "/components/before-list-table-consumos#BeforeListTableConsumos": BeforeListTableConsumos_0142d847a97c9ce9afb5411453e0d4c3,
   "/components/tab-pagar#TabPagar": TabPagar_ea3c4e4d8f0a14542eddb07aca6b9f0e,
   "/components/tab-pagar-extra#TabPagarExtra": TabPagarExtra_8336cf18a0e130635921d056634a7398,

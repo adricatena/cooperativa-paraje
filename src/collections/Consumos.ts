@@ -391,7 +391,7 @@ export const Consumos: CollectionConfig = {
   },
   endpoints: [crearReferenciaMP],
   fields: [
-    {
+    /* {
       type: 'ui',
       name: 'comprobante',
       label: 'Comprobante',
@@ -401,7 +401,7 @@ export const Consumos: CollectionConfig = {
           Field: '/components/comprobante/viewer#ComprobanteViewer',
         },
       },
-    },
+    }, */
     {
       name: 'medidor',
       label: 'Medidor',
