@@ -55,14 +55,6 @@ export function TabPagarExtra() {
   if (isLoading) return <Button disabled>Cargando...</Button>
 
   if (gastoExtraordinario?.current?.estado === 'PAGADO') {
-    /* return (
-      <PDFDownloadLink
-        document={<Comprobante consumo={consumo.current} />}
-        fileName={`comprobante_pago_${consumo.current?.titulo}.pdf`}
-      >
-        <Button>Descargar comprobante</Button>
-      </PDFDownloadLink>
-    ) */
     return <Button disabled>Descargar comprobante</Button>
   }
 
