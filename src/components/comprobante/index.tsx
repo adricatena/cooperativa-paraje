@@ -106,7 +106,6 @@ export function Comprobante({ consumo }: Props) {
             <Text style={[styles.texto]}>
               Fecha de Emisión: {new Date(consumo.createdAt).toLocaleDateString('es-AR')}
             </Text>
-            {/* <Text style={[styles.texto]}>C.E.S.P. Número 1343142342341123</Text> */}
           </View>
         </View>
         <View>
