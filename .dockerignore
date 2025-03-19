@@ -1,0 +1,15 @@
+# flyctl launch added from .gitignore
+**/build
+**/dist
+media
+**/node_modules
+**/.DS_Store
+**/.env
+
+Dockerfile
+.dockerignore
+node_modules
+npm-debug.log
+README.md
+.next
+.git

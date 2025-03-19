@@ -20,14 +20,10 @@ const agg = [
   },
 ]
 // DEV
-/* const client = await MongoClient.connect(
-  'mongodb+srv://adricatena:bfrqYw9xzdADFJkZ@cluster0.lrlqy.mongodb.net/',
-) */
+/* const client = await MongoClient.connect('') */
 
 // PROD
-const client = await MongoClient.connect(
-  'mongodb+srv://adricatena:NGt9T6bBRzsBmDJR@cluster0.vpbnc.mongodb.net/',
-)
+const client = await MongoClient.connect('')
 
 const coll = client.db('test').collection('medidores')
 const cursor = coll.aggregate(agg)
