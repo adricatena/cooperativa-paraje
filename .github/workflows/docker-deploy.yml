@@ -2,8 +2,7 @@ name: Build and Push to GHCR
 
 on:
   push:
-    # branches: [main, master]
-    branches: [docker-build]
+    branches: [main, master]
   workflow_dispatch:
 
 jobs:
