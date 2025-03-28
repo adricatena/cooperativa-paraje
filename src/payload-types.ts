@@ -54,6 +54,7 @@ export type SupportedTimezones =
   | 'Asia/Singapore'
   | 'Asia/Tokyo'
   | 'Asia/Seoul'
+  | 'Australia/Brisbane'
   | 'Australia/Sydney'
   | 'Pacific/Guam'
   | 'Pacific/Noumea'
@@ -178,6 +179,10 @@ export interface Usuario {
   confirmado?: boolean | null;
   activo?: boolean | null;
   desarrollador?: boolean | null;
+  /**
+   * Si el pago es manual, se deben indicar los datos correspondientes en el consumo
+   */
+  pago_manual?: boolean | null;
   observaciones?: string | null;
   updatedAt: string;
   createdAt: string;
@@ -240,6 +245,13 @@ export interface Consumo {
    * Periodo (numero de mes) correspondiente a la lectura
    */
   periodo: string;
+  observaciones?: string | null;
+  pago_manual: boolean;
+  pago_manual_data?: {
+    precio_final?: number | null;
+    fecha_pago?: string | null;
+    meses_vencido?: number | null;
+  };
   periodo_normalizado?: string | null;
   nro_comprobante?: number | null;
   datos_facturacion?: {
@@ -461,6 +473,7 @@ export interface UsuariosSelect<T extends boolean = true> {
   confirmado?: T;
   activo?: T;
   desarrollador?: T;
+  pago_manual?: T;
   observaciones?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -498,6 +511,15 @@ export interface ConsumosSelect<T extends boolean = true> {
   fecha_lectura?: T;
   estado?: T;
   periodo?: T;
+  observaciones?: T;
+  pago_manual?: T;
+  pago_manual_data?:
+    | T
+    | {
+        precio_final?: T;
+        fecha_pago?: T;
+        meses_vencido?: T;
+      };
   periodo_normalizado?: T;
   nro_comprobante?: T;
   datos_facturacion?:
