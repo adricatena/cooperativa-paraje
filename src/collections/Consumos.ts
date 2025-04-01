@@ -1,6 +1,7 @@
 import {
   isAdminOrMoreCollectionAccess,
   isAdminOrMyMeterCollectionAccess,
+  isDevCollectionAccess,
   isSuperAdminOrMoreCollectionAccess,
 } from '@/access/collection-access'
 import {
@@ -9,11 +10,10 @@ import {
   isSuperAdminOrMoreFieldAccess,
 } from '@/access/field-access'
 import { fieldTitulo } from '@/fields/titulo'
-import type { Consumo, Usuario } from '@/payload-types'
+import type { Consumo } from '@/payload-types'
 import { round } from '@/utils/math'
 import dayjs from 'dayjs'
 import MercadoPagoConfig, { Preference } from 'mercadopago'
-import type { FieldAccessArgs } from 'node_modules/payload/dist/fields/config/types'
 import {
   APIError,
   type CollectionAfterChangeHook,
@@ -165,29 +165,6 @@ const beforeChange: CollectionBeforeChangeHook<Consumo> = async ({ data, req, op
       },
       consumo_real,
     }
-  }
-  if (operation === 'update' && data?.pago_manual) {
-    const { ultimo_nro_comprobante_usado = 1 } = await req.payload.findGlobal({
-      slug: 'variables',
-    })
-
-    data.datos_facturacion!.precio_final = data.pago_manual_data?.precio_final
-    data.datos_facturacion!.fecha_pago = data.pago_manual_data?.fecha_pago
-    data.datos_facturacion!.meses_vencido = data.pago_manual_data?.meses_vencido
-    data.datos_facturacion!.id_pago_mp = data.id
-
-    data.precio_final = data.pago_manual_data?.precio_final
-    data.nro_comprobante = (ultimo_nro_comprobante_usado ?? 0) + 1
-    data.estado = 'PAGADO'
-
-    await req.payload.updateGlobal({
-      slug: 'variables',
-      data: {
-        ultimo_nro_comprobante_usado: (ultimo_nro_comprobante_usado ?? 0) + 1,
-      },
-    })
-
-    return data
   }
 }
 const afterChange: CollectionAfterChangeHook<Consumo> = async ({ doc, operation, req }) => {
@@ -403,7 +380,7 @@ export const Consumos: CollectionConfig = {
   access: {
     create: isAdminOrMoreCollectionAccess,
     read: isAdminOrMyMeterCollectionAccess,
-    update: isSuperAdminOrMoreCollectionAccess,
+    update: isDevCollectionAccess,
     delete: isSuperAdminOrMoreCollectionAccess,
   },
   hooks: {
@@ -441,9 +418,6 @@ export const Consumos: CollectionConfig = {
           },
         ],
       },
-      access: {
-        update: isDevFieldAccess,
-      },
     },
     {
       name: 'lectura',
@@ -454,9 +428,6 @@ export const Consumos: CollectionConfig = {
       admin: {
         placeholder: '123.45',
         description: 'Numero obtenido de la lectura',
-      },
-      access: {
-        update: isDevFieldAccess,
       },
     },
     {
@@ -471,9 +442,6 @@ export const Consumos: CollectionConfig = {
           displayFormat: 'dd/MM/yyyy',
         },
       },
-      access: {
-        update: isDevFieldAccess,
-      },
     },
     {
       name: 'estado',
@@ -483,7 +451,9 @@ export const Consumos: CollectionConfig = {
       defaultValue: 'ADEUDADO',
       required: true,
       access: {
-        update: isDevFieldAccess,
+        create: isSuperAdminOrMoreFieldAccess,
+        read: () => true,
+        update: isSuperAdminOrMoreFieldAccess,
       },
     },
     {
@@ -499,104 +469,6 @@ export const Consumos: CollectionConfig = {
         description: 'Periodo (numero de mes) correspondiente a la lectura',
         placeholder: '01/2000',
       },
-      access: {
-        update: isDevFieldAccess,
-      },
-    },
-    {
-      type: 'textarea',
-      name: 'observaciones',
-      label: 'Observaciones',
-      access: {
-        create: isSuperAdminOrMoreFieldAccess,
-        read: isSuperAdminOrMoreFieldAccess,
-        update: isSuperAdminOrMoreFieldAccess,
-      },
-      admin: {
-        disableListColumn: true,
-        disableListFilter: true,
-      },
-    },
-    {
-      type: 'checkbox',
-      name: 'pago_manual',
-      label: 'Pago manual',
-      defaultValue: false,
-      required: true,
-      access: {
-        create: () => false,
-        read: () => true,
-        update: async ({ req, data }: FieldAccessArgs<Consumo, Consumo>) => {
-          const canEdit = req.user?.desarrollador || req.user?.rol === 'SUPERADMINISTRADOR'
-          if (!canEdit) return false
-
-          if (data?.estado === 'PAGADO') {
-            return false
-          }
-
-          let medidor = data?.medidor
-          if (typeof medidor === 'string') {
-            medidor = await req.payload.findByID({
-              collection: 'medidores',
-              id: medidor,
-              depth: 3,
-            })
-          }
-
-          return (medidor?.usuario as Usuario)?.pago_manual ?? false
-        },
-      },
-    },
-    {
-      type: 'group',
-      name: 'pago_manual_data',
-      label: 'Datos de pago manual',
-      access: {
-        create: () => false,
-        read: isSuperAdminOrMoreFieldAccess,
-        update: async ({ req, data }: FieldAccessArgs<Consumo, Consumo>) => {
-          const canEdit = req.user?.desarrollador || req.user?.rol === 'SUPERADMINISTRADOR'
-          if (!canEdit) return false
-
-          if (data?.estado === 'PAGADO') {
-            return false
-          }
-
-          let medidor = data?.medidor
-          if (typeof medidor === 'string') {
-            medidor = await req.payload.findByID({
-              collection: 'medidores',
-              id: medidor,
-              depth: 3,
-            })
-          }
-
-          return (medidor?.usuario as Usuario)?.pago_manual ?? false
-        },
-      },
-      admin: {
-        condition: (data, siblingData) => data?.pago_manual || siblingData?.pago_manual,
-        disableListColumn: true,
-        disableListFilter: true,
-      },
-      fields: [
-        {
-          type: 'number',
-          name: 'precio_final',
-          label: 'Precio final',
-        },
-        {
-          type: 'date',
-          name: 'fecha_pago',
-          label: 'Fecha de pago',
-        },
-        {
-          type: 'number',
-          name: 'meses_vencido',
-          label: 'Meses vencido',
-          defaultValue: 0,
-        },
-      ],
     },
     {
       type: 'text',

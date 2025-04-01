@@ -245,22 +245,6 @@ export const Usuarios: CollectionConfig = {
       },
     },
     {
-      type: 'checkbox',
-      name: 'pago_manual',
-      label: 'Pago manual',
-      defaultValue: false,
-      admin: {
-        description:
-          'Si el pago es manual, se deben indicar los datos correspondientes en el consumo',
-        position: 'sidebar',
-      },
-      access: {
-        create: isSuperAdminOrMoreFieldAccess,
-        read: isSuperAdminOrMoreFieldAccess,
-        update: isSuperAdminOrMoreFieldAccess,
-      },
-    },
-    {
       type: 'textarea',
       name: 'observaciones',
       label: 'Observaciones',
