@@ -38,6 +38,13 @@ jobs:
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
+        env:
+          EMAIL_AUTH_PASS: ${{ secrets.EMAIL_AUTH_PASS }}
+          EMAIL_AUTH_USER: ${{ secrets.EMAIL_AUTH_USER }}
+          EMAIL_FROM_ADDRESS: ${{ secrets.EMAIL_FROM_ADDRESS }}
+          EMAIL_FROM_NAME: ${{ secrets.EMAIL_FROM_NAME }}
+          EMAIL_SMTP_HOST: ${{ secrets.EMAIL_SMTP_HOST }}
+          EMAIL_SMTP_PORT: ${{ secrets.EMAIL_SMTP_PORT }}
         with:
           context: .
           push: true
