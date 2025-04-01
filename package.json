@@ -15,18 +15,18 @@
     "start": "cross-env NODE_OPTIONS=--no-deprecation next start"
   },
   "dependencies": {
-    "@payloadcms/db-mongodb": "3.29.0",
-    "@payloadcms/next": "3.29.0",
-    "@payloadcms/payload-cloud": "3.29.0",
-    "@payloadcms/richtext-lexical": "3.29.0",
+    "@payloadcms/db-mongodb": "3.31.0",
+    "@payloadcms/next": "3.31.0",
+    "@payloadcms/payload-cloud": "3.31.0",
+    "@payloadcms/richtext-lexical": "3.31.0",
     "@react-pdf/renderer": "4.3.0",
     "client-only": "0.0.1",
     "cross-env": "7.0.3",
     "dayjs": "1.11.13",
     "graphql": "16.10.0",
     "mercadopago": "2.3.0",
-    "next": "15.2.2",
-    "payload": "3.29.0",
+    "next": "15.2.3",
+    "payload": "3.31.0",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "server-only": "0.0.1",
@@ -41,7 +41,7 @@
     "typescript": "5.8.2"
   },
   "engines": {
-    "bun": "1.2.8"
+    "bun": "1.2.5"
   },
-  "packageManager": "bun@1.2.8"
+  "packageManager": "bun@1.2.5"
 }
