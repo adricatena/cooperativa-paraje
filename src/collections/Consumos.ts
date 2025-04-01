@@ -13,6 +13,7 @@ import type { Consumo, Usuario } from '@/payload-types'
 import { round } from '@/utils/math'
 import dayjs from 'dayjs'
 import MercadoPagoConfig, { Preference } from 'mercadopago'
+import type { FieldAccessArgs } from 'node_modules/payload/dist/fields/config/types'
 import {
   APIError,
   type CollectionAfterChangeHook,
@@ -21,28 +22,7 @@ import {
   type CollectionBeforeReadHook,
   type CollectionConfig,
   type Endpoint,
-  type FieldAccess,
 } from 'payload'
-
-const fieldAccessUpdateManual: FieldAccess<Consumo, Consumo> = async ({ req, data }) => {
-  const canEdit = req.user?.desarrollador || req.user?.rol === 'SUPERADMINISTRADOR'
-  if (!canEdit) return false
-
-  if (data?.estado === 'PAGADO') {
-    return false
-  }
-
-  let medidor = data?.medidor
-  if (typeof medidor === 'string') {
-    medidor = await req.payload.findByID({
-      collection: 'medidores',
-      id: medidor,
-      depth: 3,
-    })
-  }
-
-  return (medidor?.usuario as Usuario)?.pago_manual ?? false
-}
 
 const PERIODO_FORMAT = 'YYYY/MM'
 
@@ -546,7 +526,25 @@ export const Consumos: CollectionConfig = {
       access: {
         create: () => false,
         read: () => true,
-        update: fieldAccessUpdateManual,
+        update: async ({ req, data }: FieldAccessArgs<Consumo, Consumo>) => {
+          const canEdit = req.user?.desarrollador || req.user?.rol === 'SUPERADMINISTRADOR'
+          if (!canEdit) return false
+
+          if (data?.estado === 'PAGADO') {
+            return false
+          }
+
+          let medidor = data?.medidor
+          if (typeof medidor === 'string') {
+            medidor = await req.payload.findByID({
+              collection: 'medidores',
+              id: medidor,
+              depth: 3,
+            })
+          }
+
+          return (medidor?.usuario as Usuario)?.pago_manual ?? false
+        },
       },
     },
     {
@@ -556,7 +554,25 @@ export const Consumos: CollectionConfig = {
       access: {
         create: () => false,
         read: isSuperAdminOrMoreFieldAccess,
-        update: fieldAccessUpdateManual,
+        update: async ({ req, data }: FieldAccessArgs<Consumo, Consumo>) => {
+          const canEdit = req.user?.desarrollador || req.user?.rol === 'SUPERADMINISTRADOR'
+          if (!canEdit) return false
+
+          if (data?.estado === 'PAGADO') {
+            return false
+          }
+
+          let medidor = data?.medidor
+          if (typeof medidor === 'string') {
+            medidor = await req.payload.findByID({
+              collection: 'medidores',
+              id: medidor,
+              depth: 3,
+            })
+          }
+
+          return (medidor?.usuario as Usuario)?.pago_manual ?? false
+        },
       },
       admin: {
         condition: (data, siblingData) => data?.pago_manual || siblingData?.pago_manual,
