@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@payloadcms/db-mongodb": "3.37.0",
+    "@payloadcms/email-nodemailer": "3.37.0",
     "@payloadcms/next": "3.37.0",
     "@payloadcms/payload-cloud": "3.37.0",
     "@payloadcms/richtext-lexical": "3.37.0",
@@ -28,6 +29,7 @@
     "mercadopago": "2.5.0",
     "next": "15.3.1",
     "payload": "3.37.0",
+    "qs-esm": "7.0.2",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "server-only": "0.0.1",
