@@ -1,14 +1,9 @@
-import { MongoClient } from 'mongodb'
-
-/*
- * Requires the MongoDB Node.js Driver
- * https://mongodb.github.io/node-mongodb-native
- */
+/* import { MongoClient } from 'mongodb'
 
 const agg = [
-  /* {
-    $limit: 10, // Agregamos el límite al inicio del pipeline
-  }, */
+  // {
+  //   $limit: 10, // Agregamos el límite al inicio del pipeline
+  // },
   {
     $addFields: {
       nro_comprobante: {
@@ -37,7 +32,7 @@ const agg = [
 ]
 
 // DEV
-/* const client = await MongoClient.connect('') */
+// const client = await MongoClient.connect('')
 
 // PROD
 const client = await MongoClient.connect('')
@@ -45,4 +40,4 @@ const client = await MongoClient.connect('')
 const coll = client.db('test').collection('consumos')
 const cursor = coll.aggregate(agg)
 const result = await cursor.toArray()
-await client.close()
+await client.close() */

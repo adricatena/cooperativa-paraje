@@ -1,9 +1,4 @@
-import { MongoClient } from 'mongodb'
-
-/*
- * Requires the MongoDB Node.js Driver
- * https://mongodb.github.io/node-mongodb-native
- */
+/* import { MongoClient } from 'mongodb'
 
 const agg = [
   {
@@ -20,7 +15,7 @@ const agg = [
   },
 ]
 // DEV
-/* const client = await MongoClient.connect('') */
+const client = await MongoClient.connect('')
 
 // PROD
 const client = await MongoClient.connect('')
@@ -28,4 +23,4 @@ const client = await MongoClient.connect('')
 const coll = client.db('test').collection('medidores')
 const cursor = coll.aggregate(agg)
 const result = await cursor.toArray()
-await client.close()
+await client.close() */
