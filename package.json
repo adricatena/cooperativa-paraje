@@ -19,6 +19,7 @@
     "@payloadcms/next": "3.37.0",
     "@payloadcms/payload-cloud": "3.37.0",
     "@payloadcms/richtext-lexical": "3.37.0",
+    "@payloadcms/ui": "3.37.0",
     "@react-pdf/renderer": "4.3.0",
     "client-only": "0.0.1",
     "cross-env": "7.0.3",
