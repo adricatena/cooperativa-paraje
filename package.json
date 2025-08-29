@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@payloadcms/db-mongodb": "3.31.0",
-    "@payloadcms/next": "3.31.0",
+    "@payloadcms/next": "3.44.0",
     "@payloadcms/payload-cloud": "3.31.0",
     "@payloadcms/richtext-lexical": "3.31.0",
     "@react-pdf/renderer": "4.3.0",
