@@ -40,12 +40,5 @@
     "eslint": "9.34.0",
     "eslint-config-next": "15.5.2",
     "typescript": "5.9.2"
-  },
-  "engines": {
-    "bun": "1.2.12"
-  },
-  "packageManager": "bun@1.2.21",
-  "trustedDependencies": [
-    "sharp"
-  ]
+  }
 }
