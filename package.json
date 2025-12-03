@@ -5,7 +5,7 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "build": "cross-env NODE_OPTIONS=--no-deprecation next build",
+    "build": "cross-env NODE_OPTIONS=--no-deprecation next build --webpack",
     "dev": "cross-env NODE_OPTIONS=--no-deprecation next dev",
     "devsafe": "rm -rf .next && cross-env NODE_OPTIONS=--no-deprecation next dev",
     "generate:importmap": "cross-env NODE_OPTIONS=--no-deprecation payload generate:importmap",
@@ -16,9 +16,11 @@
   },
   "dependencies": {
     "@payloadcms/db-mongodb": "3.66.0",
+    "@payloadcms/email-nodemailer": "3.66.0",
     "@payloadcms/next": "3.66.0",
     "@payloadcms/payload-cloud": "3.66.0",
     "@payloadcms/richtext-lexical": "3.66.0",
+    "@payloadcms/ui": "3.66.0",
     "@react-pdf/renderer": "4.3.1",
     "client-only": "0.0.1",
     "cross-env": "10.1.0",
