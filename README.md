@@ -6,5 +6,3 @@ blank
 
 - **Database**: mongodb
 - **Storage Adapter**: localDisk
-
-prueba
