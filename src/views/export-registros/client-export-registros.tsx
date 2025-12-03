@@ -185,23 +185,29 @@ export function ClientExportRegistros({ periodos }: Props) {
     <>
       <h3>Consumos - Registros</h3>
       <form ref={formRef}>
-        <fieldset style={{ border: 0 }}>
-          <legend>Seleccione el periodo que desea exportar</legend>
-          {periodos.map(({ label, key }, i) => (
-            <label
-              key={key}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'flex-start',
-                marginBottom: 5,
-              }}
-            >
-              <input type="radio" id={key} name="periodo" value={key} defaultChecked={i === 0} />
-              {label}
-            </label>
-          ))}
-        </fieldset>
+        <div style={{ marginBottom: 20 }}>
+          <label htmlFor="periodo" style={{ display: 'block', marginBottom: 8 }}>
+            Seleccione el periodo que desea exportar
+          </label>
+          <select
+            id="periodo"
+            name="periodo"
+            defaultValue={periodos[0]?.key}
+            style={{
+              padding: '8px 12px',
+              fontSize: '14px',
+              borderRadius: '4px',
+              border: '1px solid #ccc',
+              minWidth: '200px',
+            }}
+          >
+            {periodos.map(({ label, key }) => (
+              <option key={key} value={key}>
+                {label}
+              </option>
+            ))}
+          </select>
+        </div>
         <div
           style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', gap: 20 }}
         >

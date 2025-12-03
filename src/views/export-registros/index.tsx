@@ -37,16 +37,18 @@ export async function ExportRegistros({ initPageResult, params, searchParams }: 
     >
       <Gutter>
         <ClientExportRegistros
-          periodos={Object.keys(periodos).map((periodo, i) => {
-            const fecha = new Date(periodo)
-            return {
-              label: fecha.toLocaleDateString('es-AR', {
-                month: 'long',
-                year: 'numeric',
-              }),
-              key: periodo,
-            }
-          })}
+          periodos={Object.keys(periodos)
+            .filter((periodo) => periodo !== 'adeudado')
+            .map((periodo, i) => {
+              const fecha = new Date(periodo)
+              return {
+                label: fecha.toLocaleDateString('es-AR', {
+                  month: 'long',
+                  year: 'numeric',
+                }),
+                key: periodo,
+              }
+            })}
         />
       </Gutter>
     </DefaultTemplate>
