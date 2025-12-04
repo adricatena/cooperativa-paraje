@@ -160,7 +160,7 @@ export function ClientExportRegistros({ periodos }: Props) {
         },
       ],
     }
-    const query = stringify({ where, pagination: false, sort: '-datos_facturacion.fecha_pago' })
+    const query = stringify({ where, pagination: false, sort: 'nro_comprobante' })
     const r = await GET(`/api/consumos?${query}`)
     const { docs: consumos }: PaginatedDocs<Consumo> = await r.json()
 
