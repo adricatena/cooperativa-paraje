@@ -33,8 +33,13 @@ function createComprobantes({ consumos }: CreateTXTArgs) {
   const text = consumos
     .map((consumo) => {
       let renglon = ''
+
       const fechaPago = new Date(consumo.datos_facturacion?.fecha_pago ?? '')
-      const fechaComprobante = `${fechaPago.getFullYear()}${fechaPago.getMonth() + 1}${fechaPago.getDate()}`
+      const year = fechaPago.getFullYear()
+      const month = (fechaPago.getMonth() + 1).toString().padStart(2, '0')
+      const day = fechaPago.getDate().toString().padStart(2, '0')
+      const fechaComprobante = `${year}${month}${day}`
+
       renglon += fechaComprobante + TIPO_DE_COMPROBANTE + PUNTO_DE_VENTA
 
       const nroComprobante = (consumo.nro_comprobante ?? 0)
@@ -48,7 +53,18 @@ function createComprobantes({ consumos }: CreateTXTArgs) {
       const nroIdentificadorComprador = dni.padStart(20, '0')
       renglon += nroIdentificadorComprador
 
-      let denominacion = `${usuario.datos_personales?.apellido?.toUpperCase()} ${usuario.datos_personales?.nombre?.toUpperCase()}`
+      // Normalizar denominación eliminando acentos y caracteres especiales
+      const normalizarTexto = (texto: string) => {
+        return texto
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '') // Eliminar diacríticos
+          .replace(/Ñ/g, 'N')
+          .replace(/ñ/g, 'n')
+      }
+
+      let denominacion = `${usuario.datos_personales?.apellido?.toUpperCase() ?? ''} ${usuario.datos_personales?.nombre?.toUpperCase() ?? ''}`
+      denominacion = normalizarTexto(denominacion).trim()
+
       if (denominacion.length > 30) {
         denominacion = denominacion.slice(0, 30)
       }
@@ -78,7 +94,7 @@ function createComprobantes({ consumos }: CreateTXTArgs) {
 
       return renglon
     })
-    .join('\n')
+    .join('\r\n')
   return text
 }
 
@@ -102,7 +118,7 @@ function createAlicuotas({ consumos }: CreateTXTArgs) {
 
       return renglon
     })
-    .join('\n')
+    .join('\r\n')
   return text
 }
 
@@ -153,7 +169,18 @@ export function ClientExportRegistros({ periodos }: Props) {
 
   const downloadFile = useCallback((args: { text: string; periodo: string; prefix: string }) => {
     const { text, periodo, prefix } = args
-    const blob = new Blob([text], { type: 'text/plain;charset=utf-8' })
+
+    // Codificar como ISO-8859-1 (Latin-1)
+    const encoder = new TextEncoder()
+    const utf8Bytes = encoder.encode(text)
+    const latin1Bytes = new Uint8Array(utf8Bytes.length)
+
+    // Convertir UTF-8 a Latin-1
+    for (let i = 0; i < utf8Bytes.length; i++) {
+      latin1Bytes[i] = utf8Bytes[i] & 0xff
+    }
+
+    const blob = new Blob([latin1Bytes], { type: 'text/plain;charset=ISO-8859-1' })
     const url = window.URL.createObjectURL(blob)
     const link = document.createElement('a')
     link.href = url
