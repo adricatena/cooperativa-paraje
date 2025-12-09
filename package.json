@@ -15,20 +15,20 @@
     "start": "cross-env NODE_OPTIONS=--no-deprecation next start"
   },
   "dependencies": {
-    "@payloadcms/db-mongodb": "3.66.0",
-    "@payloadcms/email-nodemailer": "3.66.0",
-    "@payloadcms/next": "3.66.0",
-    "@payloadcms/payload-cloud": "3.66.0",
-    "@payloadcms/richtext-lexical": "3.66.0",
-    "@payloadcms/ui": "3.66.0",
+    "@payloadcms/db-mongodb": "3.67.0",
+    "@payloadcms/email-nodemailer": "3.67.0",
+    "@payloadcms/next": "3.67.0",
+    "@payloadcms/payload-cloud": "3.67.0",
+    "@payloadcms/richtext-lexical": "3.67.0",
+    "@payloadcms/ui": "3.67.0",
     "@react-pdf/renderer": "4.3.1",
     "client-only": "0.0.1",
     "cross-env": "10.1.0",
     "dayjs": "1.11.19",
     "graphql": "16.12.0",
     "mercadopago": "2.11.0",
-    "next": "16.0.7",
-    "payload": "3.66.0",
+    "next": "16.0.8",
+    "payload": "3.67.0",
     "qs-esm": "7.0.2",
     "react": "19.2.1",
     "react-dom": "19.2.1",
@@ -36,11 +36,11 @@
     "sharp": "0.34.5"
   },
   "devDependencies": {
-    "@types/node": "24.10.1",
+    "@types/node": "24.10.2",
     "@types/react": "19.2.7",
     "@types/react-dom": "19.2.3",
     "eslint": "9.39.1",
-    "eslint-config-next": "16.0.7",
+    "eslint-config-next": "16.0.8",
     "typescript": "5.9.3"
   },
   "pnpm": {
