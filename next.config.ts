@@ -1,7 +1,7 @@
 import { withPayload } from '@payloadcms/next/withPayload'
 import type { NextConfig } from 'next'
- 
-const nextConfig:  NextConfig = {
+
+const nextConfig: NextConfig = {
   // Your Next.js config here
   webpack: (webpackConfig) => {
     webpackConfig.resolve.extensionAlias = {
@@ -13,6 +13,7 @@ const nextConfig:  NextConfig = {
     return webpackConfig
   },
   output: 'standalone',
+  devIndicators: false,
 }
 
 export default withPayload(nextConfig, { devBundleServerPackages: false })

@@ -61,6 +61,9 @@ export default buildConfig({
     meta: {
       titleSuffix: ' - Cooperativa Paraje La Virgen',
     },
+    /* dashboard: {
+      ""
+    }, */
   },
   collections: [Usuarios, Medidores, Consumos, GastosExtraordinarios],
   globals: [Variables],
