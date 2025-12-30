@@ -6,6 +6,7 @@ import { TabPagarExtra as TabPagarExtra_8336cf18a0e130635921d056634a7398 } from 
 import { LogoutButton as LogoutButton_5e1d745b0d87601ca959b57385835784 } from '../../../components/logout-button'
 import { Logo as Logo_5bbef171e543d0a1534ac71b8434d707 } from '../../../brand/logo'
 import { ExportRegistros as ExportRegistros_b0b6d802a39523a8facb8b426acb35f3 } from '../../../views/export-registros'
+import { CollectionCards as CollectionCards_ab83ff7e88da8d3530831f296ec4756a } from '@payloadcms/ui/rsc'
 
 export const importMap = {
   "/components/exportar-tabla/exportar-tabla-usuarios#ExportarTablaUsuarios": ExportarTablaUsuarios_d37ac8650395a5340121e8e035f6d94d,
@@ -15,5 +16,6 @@ export const importMap = {
   "/components/tab-pagar-extra#TabPagarExtra": TabPagarExtra_8336cf18a0e130635921d056634a7398,
   "/components/logout-button#LogoutButton": LogoutButton_5e1d745b0d87601ca959b57385835784,
   "/brand/logo#Logo": Logo_5bbef171e543d0a1534ac71b8434d707,
-  "/views/export-registros#ExportRegistros": ExportRegistros_b0b6d802a39523a8facb8b426acb35f3
+  "/views/export-registros#ExportRegistros": ExportRegistros_b0b6d802a39523a8facb8b426acb35f3,
+  "@payloadcms/ui/rsc#CollectionCards": CollectionCards_ab83ff7e88da8d3530831f296ec4756a
 }
