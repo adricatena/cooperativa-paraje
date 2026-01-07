@@ -398,6 +398,7 @@ export const Consumos: CollectionConfig = {
     singular: 'Consumo',
     plural: 'Consumos',
   },
+  defaultSort: '-periodo',
   admin: {
     useAsTitle: 'titulo',
     hideAPIURL: process.env.NODE_ENV === 'production',
@@ -418,6 +419,9 @@ export const Consumos: CollectionConfig = {
           },
         },
       },
+    },
+    pagination: {
+      defaultLimit: 25,
     },
   },
   access: {
