@@ -53,4 +53,28 @@ docs/
 # Payload specific
 .payload/
 
-/dump-prod
+# Development scripts (migrations, utilities)
+scripts/
+
+# Data dumps
+dump-prod/
+
+# Next.js generated files (not needed in container)
+next-env.d.ts
+
+# Package managers
+bun.lock
+yarn.lock
+pnpm-lock.yaml
+
+# Development dependencies info
+.npmrc
+.bunrc
+
+# Temporary files
+*.tmp
+*.swp
+.DS_Store
+
+# Local development overrides
+.env.local.example
