@@ -4,7 +4,7 @@ FROM base AS deps
 WORKDIR /app
 COPY package.json ./
 COPY bun.lock* ./
-RUN bun install --frozen-lockfile --production=false
+RUN bun install --frozen-lockfile
 
 FROM base AS builder
 WORKDIR /app
