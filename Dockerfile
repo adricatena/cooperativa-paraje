@@ -3,7 +3,7 @@ FROM oven/bun:1-alpine AS base
 FROM base AS deps
 WORKDIR /app
 COPY package.json bun.lock ./
-RUN bun install --frozen-lockfile
+RUN bun install --frozen-lockfile --production=false
 
 FROM base AS builder
 WORKDIR /app
@@ -11,8 +11,7 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
-RUN bun run build
-RUN rm -rf node_modules
+RUN bun run build && rm -rf node_modules
 
 FROM base AS runtime
 WORKDIR /app
