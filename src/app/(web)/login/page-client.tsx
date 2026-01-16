@@ -38,12 +38,12 @@ export function LoginPageClient() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-base-200 px-4 sm:px-6 md:px-8 lg:px-10">
-      <div className="w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl card bg-base-100 rounded-lg shadow p-6">
+    <div className="bg-base-200 flex min-h-screen items-center justify-center px-4 sm:px-6 md:px-8 lg:px-10">
+      <div className="card bg-base-100 w-full max-w-sm rounded-lg p-6 shadow sm:max-w-md md:max-w-lg lg:max-w-xl">
         <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
           <div className="mb-6">
-            <h2 className="text-2xl font-bold text-center mb-2">Cooperativa Paraje La Virgen</h2>
-            <p className="text-center text-gray-500 text-sm">Accede con tu email y contraseña</p>
+            <h2 className="mb-2 text-center text-2xl font-bold">Cooperativa Paraje La Virgen</h2>
+            <p className="text-center text-sm text-gray-500">Accede con tu email y contraseña</p>
           </div>
           <fieldset className="fieldset">
             <label className="fieldset-legend" htmlFor="email">

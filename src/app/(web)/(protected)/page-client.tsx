@@ -22,6 +22,7 @@ export function PageClient() {
     toast.error(response.message || 'Error al cerrar sesión.')
     setIsLoading(false)
   }
+
   return (
     <div>
       Page Client
