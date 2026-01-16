@@ -1,3 +1,4 @@
+import { HIDE_API_URL } from '@/config'
 import {
   CAMBIO_TITULAR_KEY,
   NUEVA_CONEXION_KEY,
@@ -11,9 +12,13 @@ export const Variables: GlobalConfig = {
   slug: 'variables',
   label: 'Variables',
   admin: {
-    hideAPIURL: process.env.NODE_ENV === 'production',
-    hidden: ({ user }) =>
-      !(user?.desarrollador || user?.rol === 'SUPERADMINISTRADOR' || user?.rol === 'ADMINISTRADOR'),
+    hideAPIURL: HIDE_API_URL,
+    /* hidden: ({ user }) =>
+      !(
+        (user as Usuario)?.desarrollador ||
+        (user as Usuario)?.rol === 'SUPERADMINISTRADOR' ||
+        (user as Usuario)?.rol === 'ADMINISTRADOR'
+      ), */
   },
   access: {
     read: () => true,

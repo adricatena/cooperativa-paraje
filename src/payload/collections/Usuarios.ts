@@ -12,7 +12,6 @@ import { fieldActivo } from '@/payload/fields/activo'
 import { fieldTitulo } from '@/payload/fields/titulo'
 import type {
   Access,
-  CollectionBeforeChangeHook,
   CollectionConfig,
   DateField,
   FieldAccess,
@@ -24,32 +23,32 @@ import { date, number, text } from 'payload/shared'
 
 // #region COLLECTION ACCESS
 const isAdminOrMeCollectionAccess: Access<Usuario> = ({ req, id }) =>
-  req.user?.desarrollador ||
-  req.user?.rol === 'SUPERADMINISTRADOR' ||
-  req.user?.rol === 'ADMINISTRADOR' ||
-  req.user?.id === id
+  (req.user as Usuario)?.desarrollador ||
+  (req.user as Usuario)?.rol === 'SUPERADMINISTRADOR' ||
+  (req.user as Usuario)?.rol === 'ADMINISTRADOR' ||
+  (req.user as Usuario)?.id === id
 // #endregion
 
 // #region COLLECTION HOOKS
-const beforeChange: CollectionBeforeChangeHook<Usuario> = ({ data }) => ({
+/* const beforeChange: CollectionBeforeChangeHook<Usuario> = ({ data }) => ({
   ...data,
   titulo:
     data?.rol === 'CLIENTE'
       ? `${data?.datos_personales?.cuit} - ${data.datos_personales?.nombre} ${data.datos_personales?.apellido}`
       : data.email,
-})
+}) */
 // #endregion
 
 // #region FIELD ACCESS
 const createRoleFieldAccess: FieldAccess<Usuario, Usuario> = ({ req, siblingData }) => {
-  if (req.user?.desarrollador || req.user?.rol === 'SUPERADMINISTRADOR') {
+  if ((req.user as Usuario)?.desarrollador || (req.user as Usuario)?.rol === 'SUPERADMINISTRADOR') {
     return true
   }
 
   // si es admin, solo puede crear usuarios con rol CLIENTE
-  if (req.user?.rol === 'ADMINISTRADOR') {
-    return siblingData?.rol === 'CLIENTE'
-  }
+  // if ((req.user as Usuario)?.rol === 'ADMINISTRADOR') {
+  //   return siblingData?.rol === 'CLIENTE'
+  // }
 
   return false
 }
@@ -74,7 +73,7 @@ export const Usuarios: CollectionConfig = {
   slug: 'usuarios',
   auth: true,
   admin: {
-    useAsTitle: 'titulo',
+    useAsTitle: 'email',
     hideAPIURL: process.env.NODE_ENV === 'production',
     defaultColumns: ['titulo', 'rol', 'email', 'confirmado', 'activo'],
     components: {
@@ -92,7 +91,7 @@ export const Usuarios: CollectionConfig = {
     delete: isDevCollectionAccess,
   },
   hooks: {
-    beforeChange: [beforeChange],
+    // beforeChange: [beforeChange],
   },
   fields: [
     // Email added by default
@@ -113,9 +112,9 @@ export const Usuarios: CollectionConfig = {
       type: 'select',
       name: 'rol',
       label: 'Rol',
-      options: ['SUPERADMINISTRADOR', 'ADMINISTRADOR', 'CLIENTE'],
+      options: ['SUPERADMINISTRADOR', 'ADMINISTRADOR'],
       saveToJWT: true,
-      defaultValue: 'CLIENTE',
+      defaultValue: 'ADMINISTRADOR',
       required: true,
       access: {
         create: createRoleFieldAccess,

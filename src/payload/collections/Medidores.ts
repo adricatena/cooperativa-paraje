@@ -1,4 +1,4 @@
-import type { Medidore } from '@/payload-types'
+import type { Medidore, Usuario } from '@/payload-types'
 import {
   isAdminOrMoreCollectionAccess,
   isDevCollectionAccess,
@@ -10,9 +10,9 @@ import type { Access, CollectionBeforeChangeHook, CollectionConfig } from 'paylo
 // #region COLLECTION ACCESS
 const isAdminOrMyMeter: Access<Medidore> = async ({ req }) => {
   const roleIsEnough =
-    req.user?.desarrollador ||
-    req.user?.rol === 'SUPERADMINISTRADOR' ||
-    req.user?.rol === 'ADMINISTRADOR'
+    (req.user as Usuario)?.desarrollador ||
+    (req.user as Usuario)?.rol === 'SUPERADMINISTRADOR' ||
+    (req.user as Usuario)?.rol === 'ADMINISTRADOR'
   if (roleIsEnough) return true
 
   return {

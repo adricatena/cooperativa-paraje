@@ -6,7 +6,6 @@ import {
 import type { GastosExtraordinario } from '@/payload-types'
 import {
   isAdminOrMoreCollectionAccess,
-  isAdminOrMyMeterCollectionAccess,
   isDevCollectionAccess,
   isSuperAdminOrMoreCollectionAccess,
 } from '@/payload/access/collection-access'
@@ -195,7 +194,7 @@ export const GastosExtraordinarios: CollectionConfig = {
   },
   access: {
     create: isAdminOrMoreCollectionAccess,
-    read: isAdminOrMyMeterCollectionAccess,
+    // read: isAdminOrMyMeterCollectionAccess,
     update: isDevCollectionAccess,
     delete: isSuperAdminOrMoreCollectionAccess,
   },

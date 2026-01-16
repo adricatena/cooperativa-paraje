@@ -1,7 +1,6 @@
-import type { Consumo, Usuario } from '@/payload-types'
+import type { Cliente, Consumo, Usuario } from '@/payload-types'
 import {
   isAdminOrMoreCollectionAccess,
-  isAdminOrMyMeterCollectionAccess,
   isSuperAdminOrMoreCollectionAccess,
 } from '@/payload/access/collection-access'
 import {
@@ -25,7 +24,8 @@ import {
 } from 'payload'
 
 const fieldAccessUpdateManual: FieldAccess<Consumo, Consumo> = async ({ req, data }) => {
-  const canEdit = req.user?.desarrollador || req.user?.rol === 'SUPERADMINISTRADOR'
+  const canEdit =
+    (req.user as Usuario)?.desarrollador || (req.user as Usuario)?.rol === 'SUPERADMINISTRADOR'
   if (!canEdit) return false
 
   if (data?.estado === 'PAGADO') {
@@ -376,8 +376,8 @@ const crearReferenciaMP: Endpoint = {
           },
           external_reference: consumo.id,
           payer: {
-            name: req.user?.datos_personales?.nombre ?? 'Nombre Usuario',
-            surname: req.user?.datos_personales?.apellido ?? 'Apellido Usuario',
+            name: (req.user as Cliente)?.nombre ?? 'Nombre Usuario',
+            surname: (req.user as Cliente)?.apellido ?? 'Apellido Usuario',
             email: req.user?.email ?? 'usuario@cooperativa.com',
           },
         },
@@ -426,7 +426,7 @@ export const Consumos: CollectionConfig = {
   },
   access: {
     create: isAdminOrMoreCollectionAccess,
-    read: isAdminOrMyMeterCollectionAccess,
+    // read: isAdminOrMyMeterCollectionAccess,
     update: isSuperAdminOrMoreCollectionAccess,
     delete: isSuperAdminOrMoreCollectionAccess,
   },

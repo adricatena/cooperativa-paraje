@@ -64,10 +64,12 @@ export type SupportedTimezones =
 export interface Config {
   auth: {
     usuarios: UsuarioAuthOperations;
+    cliente: ClienteAuthOperations;
   };
   blocks: {};
   collections: {
     usuarios: Usuario;
+    cliente: Cliente;
     medidores: Medidore;
     consumos: Consumo;
     gastos_extraordinarios: GastosExtraordinario;
@@ -87,6 +89,7 @@ export interface Config {
   };
   collectionsSelect: {
     usuarios: UsuariosSelect<false> | UsuariosSelect<true>;
+    cliente: ClienteSelect<false> | ClienteSelect<true>;
     medidores: MedidoresSelect<false> | MedidoresSelect<true>;
     consumos: ConsumosSelect<false> | ConsumosSelect<true>;
     gastos_extraordinarios: GastosExtraordinariosSelect<false> | GastosExtraordinariosSelect<true>;
@@ -107,9 +110,13 @@ export interface Config {
     variables: VariablesSelect<false> | VariablesSelect<true>;
   };
   locale: null;
-  user: Usuario & {
-    collection: 'usuarios';
-  };
+  user:
+    | (Usuario & {
+        collection: 'usuarios';
+      })
+    | (Cliente & {
+        collection: 'cliente';
+      });
   jobs: {
     tasks: {
       'email-nuevo-consumo': TaskEmailNuevoConsumo;
@@ -140,6 +147,24 @@ export interface UsuarioAuthOperations {
     password: string;
   };
 }
+export interface ClienteAuthOperations {
+  forgotPassword: {
+    email: string;
+    password: string;
+  };
+  login: {
+    email: string;
+    password: string;
+  };
+  registerFirstUser: {
+    email: string;
+    password: string;
+  };
+  unlock: {
+    email: string;
+    password: string;
+  };
+}
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "usuarios".
@@ -152,7 +177,7 @@ export interface Usuario {
     hasNextPage?: boolean;
     totalDocs?: number;
   };
-  rol: 'SUPERADMINISTRADOR' | 'ADMINISTRADOR' | 'CLIENTE';
+  rol: 'SUPERADMINISTRADOR' | 'ADMINISTRADOR';
   datos_personales?: {
     /**
      * Nombre completo
@@ -284,6 +309,58 @@ export interface Consumo {
   titulo: string;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "cliente".
+ */
+export interface Cliente {
+  id: string;
+  /**
+   * Nombre completo
+   */
+  nombre?: string | null;
+  /**
+   * Apellido completo
+   */
+  apellido?: string | null;
+  /**
+   * Sin guiones ni puntos
+   */
+  cuit: number;
+  /**
+   * Domicilio real del cliente
+   */
+  domicilio?: string | null;
+  /**
+   * Telefono/Celular del cliente
+   */
+  telefono: number;
+  /**
+   * Fecha de nacimiento del cliente
+   */
+  nacimiento?: string | null;
+  confirmado?: boolean | null;
+  activo?: boolean | null;
+  titulo: string;
+  updatedAt: string;
+  createdAt: string;
+  deletedAt?: string | null;
+  email: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
+  sessions?:
+    | {
+        id: string;
+        createdAt?: string | null;
+        expiresAt: string;
+      }[]
+    | null;
+  password?: string | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -422,6 +499,10 @@ export interface PayloadLockedDocument {
         value: string | Usuario;
       } | null)
     | ({
+        relationTo: 'cliente';
+        value: string | Cliente;
+      } | null)
+    | ({
         relationTo: 'medidores';
         value: string | Medidore;
       } | null)
@@ -434,10 +515,15 @@ export interface PayloadLockedDocument {
         value: string | GastosExtraordinario;
       } | null);
   globalSlug?: string | null;
-  user: {
-    relationTo: 'usuarios';
-    value: string | Usuario;
-  };
+  user:
+    | {
+        relationTo: 'usuarios';
+        value: string | Usuario;
+      }
+    | {
+        relationTo: 'cliente';
+        value: string | Cliente;
+      };
   updatedAt: string;
   createdAt: string;
 }
@@ -447,10 +533,15 @@ export interface PayloadLockedDocument {
  */
 export interface PayloadPreference {
   id: string;
-  user: {
-    relationTo: 'usuarios';
-    value: string | Usuario;
-  };
+  user:
+    | {
+        relationTo: 'usuarios';
+        value: string | Usuario;
+      }
+    | {
+        relationTo: 'cliente';
+        value: string | Cliente;
+      };
   key?: string | null;
   value?:
     | {
@@ -500,6 +591,38 @@ export interface UsuariosSelect<T extends boolean = true> {
   observaciones?: T;
   updatedAt?: T;
   createdAt?: T;
+  email?: T;
+  resetPasswordToken?: T;
+  resetPasswordExpiration?: T;
+  salt?: T;
+  hash?: T;
+  loginAttempts?: T;
+  lockUntil?: T;
+  sessions?:
+    | T
+    | {
+        id?: T;
+        createdAt?: T;
+        expiresAt?: T;
+      };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "cliente_select".
+ */
+export interface ClienteSelect<T extends boolean = true> {
+  nombre?: T;
+  apellido?: T;
+  cuit?: T;
+  domicilio?: T;
+  telefono?: T;
+  nacimiento?: T;
+  confirmado?: T;
+  activo?: T;
+  titulo?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  deletedAt?: T;
   email?: T;
   resetPasswordToken?: T;
   resetPasswordExpiration?: T;

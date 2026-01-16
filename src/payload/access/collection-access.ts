@@ -1,25 +1,27 @@
+import type { Usuario } from '@/payload-types'
 import type { Access } from 'payload'
 
-export const isDevCollectionAccess: Access = ({ req }) => Boolean(req.user?.desarrollador)
+export const isDevCollectionAccess: Access = ({ req }) =>
+  Boolean((req.user as Usuario)?.desarrollador)
 
 export const isSuperAdminOrMoreCollectionAccess: Access = ({ req }) =>
-  req.user?.desarrollador || req.user?.rol === 'SUPERADMINISTRADOR'
+  (req.user as Usuario)?.desarrollador || (req.user as Usuario)?.rol === 'SUPERADMINISTRADOR'
 
 export const isAdminOrMoreCollectionAccess: Access = ({ req }) =>
-  req.user?.desarrollador ||
-  req.user?.rol === 'SUPERADMINISTRADOR' ||
-  req.user?.rol === 'ADMINISTRADOR'
+  (req.user as Usuario)?.desarrollador ||
+  (req.user as Usuario)?.rol === 'SUPERADMINISTRADOR' ||
+  (req.user as Usuario)?.rol === 'ADMINISTRADOR'
 
-export const isAdminOrMyMeterCollectionAccess: Access = async ({ req }) => {
+/* export const isAdminOrMyMeterCollectionAccess: Access = async ({ req }) => {
   const roleIsEnough =
-    req.user?.desarrollador ||
-    req.user?.rol === 'SUPERADMINISTRADOR' ||
-    req.user?.rol === 'ADMINISTRADOR'
+    (req.user as Usuario)?.desarrollador ||
+    (req.user as Usuario)?.rol === 'SUPERADMINISTRADOR' ||
+    (req.user as Usuario)?.rol === 'ADMINISTRADOR'
   if (roleIsEnough) return true
 
   return {
     'medidor.usuario.email': {
-      equals: req.user?.email,
+      equals: (req.user as Usuario)?.email,
     },
   }
-}
+} */

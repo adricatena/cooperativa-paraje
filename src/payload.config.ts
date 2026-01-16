@@ -8,6 +8,7 @@ import { buildConfig } from 'payload'
 import { es } from 'payload/i18n/es'
 import sharp from 'sharp'
 import { fileURLToPath } from 'url'
+import { ClienteCollection } from './payload/collections/cliente'
 import { Consumos } from './payload/collections/Consumos'
 import { GastosExtraordinarios } from './payload/collections/GastosExtraordinarios'
 import { Medidores } from './payload/collections/Medidores'
@@ -61,11 +62,9 @@ export default buildConfig({
     meta: {
       titleSuffix: ' - Cooperativa Paraje La Virgen',
     },
-    /* dashboard: {
-      ""
-    }, */
+    dateFormat: 'dd/MM/yyyy',
   },
-  collections: [Usuarios, Medidores, Consumos, GastosExtraordinarios],
+  collections: [Usuarios, ClienteCollection, Medidores, Consumos, GastosExtraordinarios],
   globals: [Variables],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
