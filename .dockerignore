@@ -1,79 +1,17 @@
-# Docker files
 Dockerfile
 .dockerignore
-docker-compose*.yml
-
-# Dependencies
 node_modules
+npm-debug.log
+README.md
+.next
+.git
 
-# Build artifacts
-.next/
-out/
-build/
-dist/
-
-# Cache
-.turbo/
-.swc/
-.cache/
-*.log
-
-# Testing
-coverage/
-*.test.*
-*.spec.*
-tests/
-
-# Environment files
+.github
+.vscode
+dump-prod
+scripts
 .env*
-!.env.example
-
-# OS files
-.DS_Store
-Thumbs.db
-
-# Git
-.git/
 .gitignore
-.gitattributes
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# Docs
+# .npmrc
 *.md
-docs/
-
-# CI/CD
-.github/
-
-# Payload specific
-.payload/
-
-# Development scripts (migrations, utilities)
-scripts/
-
-# Data dumps
-dump-prod/
-
-# Next.js generated files (not needed in container)
 next-env.d.ts
-
-# Package managers
-yarn.lock
-pnpm-lock.yaml
-
-# Development dependencies info
-.npmrc
-.bunrc
-
-# Temporary files
-*.tmp
-*.swp
-.DS_Store
-
-# Local development overrides
-.env.local.example
