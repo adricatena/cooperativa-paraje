@@ -1,10 +1,10 @@
-import { isSuperAdminOrMoreCollectionAccess } from '@/access/collection-access'
-import { isDevFieldAccess } from '@/access/field-access'
 import {
   CAMBIO_TITULAR_KEY,
   NUEVA_CONEXION_KEY,
   RECONEXION_KEY,
-} from '@/data/gastos_extraordinarios'
+} from '@/constants/gastos_extraordinarios'
+import { isSuperAdminOrMoreCollectionAccess } from '@/payload/access/collection-access'
+import { isDevFieldAccess } from '@/payload/access/field-access'
 import { APIError, type GlobalConfig } from 'payload'
 
 export const Variables: GlobalConfig = {

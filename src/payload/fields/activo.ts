@@ -1,4 +1,4 @@
-import { isAdminOrMoreFieldAccess } from '@/access/field-access'
+import { isAdminOrMoreFieldAccess } from '@/payload/access/field-access'
 import type { Condition, Field, FieldAccess } from 'payload'
 
 type FieldActivoArgs = {

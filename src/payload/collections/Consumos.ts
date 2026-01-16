@@ -1,15 +1,15 @@
+import type { Consumo, Usuario } from '@/payload-types'
 import {
   isAdminOrMoreCollectionAccess,
   isAdminOrMyMeterCollectionAccess,
   isSuperAdminOrMoreCollectionAccess,
-} from '@/access/collection-access'
+} from '@/payload/access/collection-access'
 import {
   isAdminOrMoreFieldAccess,
   isDevFieldAccess,
   isSuperAdminOrMoreFieldAccess,
-} from '@/access/field-access'
-import { fieldTitulo } from '@/fields/titulo'
-import type { Consumo, Usuario } from '@/payload-types'
+} from '@/payload/access/field-access'
+import { fieldTitulo } from '@/payload/fields/titulo'
 import { round } from '@/utils/math'
 import dayjs from 'dayjs'
 import MercadoPagoConfig, { Preference } from 'mercadopago'

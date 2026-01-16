@@ -1,17 +1,17 @@
 import {
+  CAMBIO_TITULAR_KEY,
+  NUEVA_CONEXION_KEY,
+  RECONEXION_KEY,
+} from '@/constants/gastos_extraordinarios'
+import type { GastosExtraordinario } from '@/payload-types'
+import {
   isAdminOrMoreCollectionAccess,
   isAdminOrMyMeterCollectionAccess,
   isDevCollectionAccess,
   isSuperAdminOrMoreCollectionAccess,
-} from '@/access/collection-access'
-import { isSuperAdminOrMoreFieldAccess } from '@/access/field-access'
-import {
-  CAMBIO_TITULAR_KEY,
-  NUEVA_CONEXION_KEY,
-  RECONEXION_KEY,
-} from '@/data/gastos_extraordinarios'
-import { fieldTitulo } from '@/fields/titulo'
-import type { GastosExtraordinario } from '@/payload-types'
+} from '@/payload/access/collection-access'
+import { isSuperAdminOrMoreFieldAccess } from '@/payload/access/field-access'
+import { fieldTitulo } from '@/payload/fields/titulo'
 import { round } from '@/utils/math'
 import MercadoPagoConfig, { Preference } from 'mercadopago'
 import {

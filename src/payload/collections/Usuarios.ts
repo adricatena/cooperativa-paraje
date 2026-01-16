@@ -1,12 +1,15 @@
-import { isAdminOrMoreCollectionAccess, isDevCollectionAccess } from '@/access/collection-access'
+import type { Usuario } from '@/payload-types'
+import {
+  isAdminOrMoreCollectionAccess,
+  isDevCollectionAccess,
+} from '@/payload/access/collection-access'
 import {
   isAdminOrMoreFieldAccess,
   isDevFieldAccess,
   isSuperAdminOrMoreFieldAccess,
-} from '@/access/field-access'
-import { fieldActivo } from '@/fields/activo'
-import { fieldTitulo } from '@/fields/titulo'
-import type { Usuario } from '@/payload-types'
+} from '@/payload/access/field-access'
+import { fieldActivo } from '@/payload/fields/activo'
+import { fieldTitulo } from '@/payload/fields/titulo'
 import type {
   Access,
   CollectionBeforeChangeHook,

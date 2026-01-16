@@ -8,14 +8,14 @@ import { buildConfig } from 'payload'
 import { es } from 'payload/i18n/es'
 import sharp from 'sharp'
 import { fileURLToPath } from 'url'
-import { Consumos } from './collections/Consumos'
-import { GastosExtraordinarios } from './collections/GastosExtraordinarios'
-import { Medidores } from './collections/Medidores'
-import { Usuarios } from './collections/Usuarios'
-import { notificacionPagoEndpoint } from './endpoints/notificacion-pago'
-import { Variables } from './globals/Variables'
-import { emailNuevoConsumo } from './tasks/email-nuevo-consumo'
-import { emailNuevoGastoExtra } from './tasks/email-nuevo-gasto-extra'
+import { Consumos } from './payload/collections/Consumos'
+import { GastosExtraordinarios } from './payload/collections/GastosExtraordinarios'
+import { Medidores } from './payload/collections/Medidores'
+import { Usuarios } from './payload/collections/Usuarios'
+import { notificacionPagoEndpoint } from './payload/endpoints/notificacion-pago'
+import { Variables } from './payload/globals/Variables'
+import { emailNuevoConsumo } from './payload/tasks/email-nuevo-consumo'
+import { emailNuevoGastoExtra } from './payload/tasks/email-nuevo-gasto-extra'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -44,8 +44,8 @@ export default buildConfig({
     avatar: 'default',
     components: {
       graphics: {
-        // Icon: '/brand/home-icon#HomeIcon',
-        Logo: '/brand/logo#Logo',
+        // Icon: '/payload/brand/home-icon#HomeIcon',
+        Logo: '/payload/brand/logo#Logo',
       },
       logout: {
         Button: '/components/logout-button#LogoutButton',
@@ -53,7 +53,7 @@ export default buildConfig({
       views: {
         exportRegistros: {
           path: '/consumos/exportar-registros',
-          Component: '/views/export-registros#ExportRegistros',
+          Component: '/payload/views/export-registros#ExportRegistros',
         },
       },
     },

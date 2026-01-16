@@ -1,4 +1,4 @@
-import { getTipoGastoLabel } from '@/collections/GastosExtraordinarios'
+import { getTipoGastoLabel } from '@/payload/collections/GastosExtraordinarios'
 import type { TaskConfig } from 'payload'
 
 export const emailNuevoGastoExtra = {

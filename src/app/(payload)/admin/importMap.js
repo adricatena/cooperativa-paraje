@@ -4,8 +4,8 @@ import { BeforeListTableConsumos as BeforeListTableConsumos_0142d847a97c9ce9afb5
 import { TabPagar as TabPagar_ea3c4e4d8f0a14542eddb07aca6b9f0e } from '../../../components/tab-pagar'
 import { TabPagarExtra as TabPagarExtra_8336cf18a0e130635921d056634a7398 } from '../../../components/tab-pagar-extra'
 import { LogoutButton as LogoutButton_5e1d745b0d87601ca959b57385835784 } from '../../../components/logout-button'
-import { Logo as Logo_5bbef171e543d0a1534ac71b8434d707 } from '../../../brand/logo'
-import { ExportRegistros as ExportRegistros_b0b6d802a39523a8facb8b426acb35f3 } from '../../../views/export-registros'
+import { Logo as Logo_ddf2d2f79243e59a3e81e749911eee83 } from '../../../payload/brand/logo'
+import { ExportRegistros as ExportRegistros_1951584e467a660e87c2cb875e676517 } from '../../../payload/views/export-registros'
 import { CollectionCards as CollectionCards_ab83ff7e88da8d3530831f296ec4756a } from '@payloadcms/ui/rsc'
 
 export const importMap = {
@@ -15,7 +15,7 @@ export const importMap = {
   "/components/tab-pagar#TabPagar": TabPagar_ea3c4e4d8f0a14542eddb07aca6b9f0e,
   "/components/tab-pagar-extra#TabPagarExtra": TabPagarExtra_8336cf18a0e130635921d056634a7398,
   "/components/logout-button#LogoutButton": LogoutButton_5e1d745b0d87601ca959b57385835784,
-  "/brand/logo#Logo": Logo_5bbef171e543d0a1534ac71b8434d707,
-  "/views/export-registros#ExportRegistros": ExportRegistros_b0b6d802a39523a8facb8b426acb35f3,
+  "/payload/brand/logo#Logo": Logo_ddf2d2f79243e59a3e81e749911eee83,
+  "/payload/views/export-registros#ExportRegistros": ExportRegistros_1951584e467a660e87c2cb875e676517,
   "@payloadcms/ui/rsc#CollectionCards": CollectionCards_ab83ff7e88da8d3530831f296ec4756a
 }

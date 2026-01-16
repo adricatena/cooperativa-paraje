@@ -1,7 +1,10 @@
-import { isAdminOrMoreCollectionAccess, isDevCollectionAccess } from '@/access/collection-access'
-import { fieldActivo } from '@/fields/activo'
-import { fieldTitulo } from '@/fields/titulo'
 import type { Medidore } from '@/payload-types'
+import {
+  isAdminOrMoreCollectionAccess,
+  isDevCollectionAccess,
+} from '@/payload/access/collection-access'
+import { fieldActivo } from '@/payload/fields/activo'
+import { fieldTitulo } from '@/payload/fields/titulo'
 import type { Access, CollectionBeforeChangeHook, CollectionConfig } from 'payload'
 
 // #region COLLECTION ACCESS
