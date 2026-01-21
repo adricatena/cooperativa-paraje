@@ -3,7 +3,7 @@ import type { ServerProps } from 'payload'
 import { ExportarTablaConsumos } from './exportar-tabla/exportar-tabla-consumos'
 
 export function BeforeListTableConsumos({ user }: ServerProps) {
-  if (!user || user?.rol === 'CLIENTE') return null
+  if (!user || user?.collection !== 'usuarios') return null
 
   return (
     <section

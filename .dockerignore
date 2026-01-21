@@ -1,17 +1,22 @@
-Dockerfile
-.dockerignore
-node_modules
-npm-debug.log
-README.md
-.next
 .git
 
 .github
+.next
 .vscode
 dump-prod
+node_modules
 scripts
+
+.dockerignore
 .env*
 .gitignore
 # .npmrc
-*.md
+.prettierrc.json
+Dockerfile
+eslint.config.mjs
 next-env.d.ts
+README.md
+tailwind.config.*
+npm-debug.log
+
+*.md
