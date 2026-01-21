@@ -4,7 +4,7 @@ import { DownloadMedidoresPeriodos } from './download-medidores-periodos'
 import { ExportarTablaMedidores } from './exportar-tabla/exportar-tabla-medidores'
 
 export async function BeforeListTableMedidores({ user, payload }: ServerProps) {
-  if (!user || user.rol === 'CLIENTE') return null
+  if (!user || user?.collection !== 'usuarios') return null
 
   const { docs: medidores } = await payload.find({
     collection: 'medidores',
