@@ -12,7 +12,9 @@
     "generate:types": "cross-env NODE_OPTIONS=--no-deprecation payload generate:types",
     "lint": "cross-env NODE_OPTIONS=--no-deprecation next lint",
     "payload": "cross-env NODE_OPTIONS=--no-deprecation payload",
-    "start": "cross-env NODE_OPTIONS=--no-deprecation next start"
+    "start": "cross-env NODE_OPTIONS=--no-deprecation next start",
+    "audit:fecha-pago": "cross-env NODE_OPTIONS=--no-deprecation node --env-file=.env --import tsx scripts/audit-fecha-pago-mp.ts",
+    "fix:fecha-pago": "cross-env NODE_OPTIONS=--no-deprecation node --env-file=.env --import tsx scripts/audit-fecha-pago-mp.ts --apply"
   },
   "dependencies": {
     "@payloadcms/db-mongodb": "3.70.0",
@@ -41,6 +43,7 @@
     "@types/react-dom": "19.2.3",
     "eslint": "9.39.2",
     "eslint-config-next": "16.1.1",
+    "tsx": "4.21.0",
     "typescript": "5.9.3"
   },
   "pnpm": {

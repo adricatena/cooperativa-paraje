@@ -1,20 +1,48 @@
 import { createHmac } from 'crypto'
-import dayjs from 'dayjs'
 import MercadoPagoConfig, { Payment } from 'mercadopago'
+import type { PaymentResponse } from 'mercadopago/dist/clients/payment/commonTypes'
 import type { Endpoint, PayloadRequest } from 'payload'
 
 async function processPagoConsumo(args: {
   req: PayloadRequest
   metadata: any
   id_pago_mp: string
+  payment: PaymentResponse
 }) {
-  const { req, metadata, id_pago_mp } = args
-  // leer de variables globales el ultimo nro de comprobante usado, aumentarlo en 1, actualizar el consumo y actualizar la variable global
+  const { req, metadata, id_pago_mp, payment } = args
+  const { consumo_id, precio_final, meses_vencido } = metadata
+
+  const consumo = await req.payload.findByID({
+    collection: 'consumos',
+    id: consumo_id,
+  })
+
+  if (
+    consumo.estado === 'PAGADO' &&
+    consumo.datos_facturacion?.id_pago_mp === String(id_pago_mp)
+  ) {
+    console.log(
+      `[notificacion-pago] Reintento ignorado: consumo ${consumo_id} ya PAGADO con id_pago_mp ${id_pago_mp}`,
+    )
+    return
+  }
+
+  if (consumo.estado === 'PAGADO') {
+    console.error(
+      `[notificacion-pago] Consumo ${consumo_id} ya PAGADO con otro id_pago_mp (${consumo.datos_facturacion?.id_pago_mp} vs ${id_pago_mp})`,
+    )
+    return
+  }
+
+  const dateApproved = payment.date_approved
+  if (!dateApproved) {
+    console.error(`[notificacion-pago] Pago ${id_pago_mp} sin date_approved`)
+    throw new Error('Pago sin date_approved')
+  }
+
   const { ultimo_nro_comprobante_usado = 1 } = await req.payload.findGlobal({
     slug: 'variables',
   })
-
-  const { consumo_id, precio_final, meses_vencido } = metadata
 
   await req.payload.update({
     collection: 'consumos',
@@ -22,10 +50,10 @@ async function processPagoConsumo(args: {
     data: {
       estado: 'PAGADO',
       datos_facturacion: {
-        id_pago_mp,
+        id_pago_mp: String(id_pago_mp),
         precio_final,
         meses_vencido,
-        fecha_pago: dayjs().toISOString(),
+        fecha_pago: dateApproved,
       },
       precio_final,
       nro_comprobante: (ultimo_nro_comprobante_usado ?? 0) + 1,
@@ -124,7 +152,8 @@ export const notificacionPagoEndpoint: Endpoint = {
         await processPagoConsumo({
           req,
           metadata: payment.metadata,
-          id_pago_mp: id,
+          id_pago_mp: String(id),
+          payment,
         })
       }
 
