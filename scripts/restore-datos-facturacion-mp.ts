@@ -135,9 +135,7 @@ async function main() {
     if (summary.needs_restore > 0) {
       console.log('\nPara aplicar:')
       if (args.allIncomplete) {
-        console.log(
-          `  pnpm fix:datos-facturacion -- --all-incomplete --from-json=${args.fromJson}`,
-        )
+        console.log(`  pnpm fix:datos-facturacion -- --all-incomplete --from-json=${args.fromJson}`)
       } else {
         console.log(
           `  pnpm fix:datos-facturacion -- --ids=${ids.join(',')} --from-json=${args.fromJson}`,

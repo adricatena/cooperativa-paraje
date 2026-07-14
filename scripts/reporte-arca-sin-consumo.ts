@@ -147,7 +147,10 @@ async function main() {
   const importe = sinMatch.reduce((s, r) => s + r.importe_total, 0)
   const iva = sinMatch.reduce((s, r) => s + r.iva, 0)
 
-  const porMes = new Map<string, { lineas: number; nros: Set<number>; importe: number; iva: number }>()
+  const porMes = new Map<
+    string,
+    { lineas: number; nros: Set<number>; importe: number; iva: number }
+  >()
   for (const row of sinMatch) {
     const bucket = porMes.get(row.mes_archivo) ?? {
       lineas: 0,

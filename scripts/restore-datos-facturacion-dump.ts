@@ -51,7 +51,10 @@ async function main() {
   if (args.countOnly) {
     await mkdir(OUTPUT_DIR, { recursive: true })
     const out = path.join(OUTPUT_DIR, `missing-tariffs-${stamp}.json`)
-    await writeFile(out, JSON.stringify({ generated_at: new Date().toISOString(), ...count }, null, 2))
+    await writeFile(
+      out,
+      JSON.stringify({ generated_at: new Date().toISOString(), ...count }, null, 2),
+    )
     console.log(`\nIDs: ${out}`)
     process.exit(0)
   }

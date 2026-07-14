@@ -2,9 +2,9 @@ import { mkdir, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import {
+  calcImporteDuplicadosExtra,
   calcIvaDesdePrecioFinal,
   calcIvaDuplicadosExtra,
-  calcImporteDuplicadosExtra,
   loadArcaTxtDirectory,
   roundPrecio,
   type ArcaTxtAppearance,
@@ -15,10 +15,7 @@ import { loadAuditRowsFromJson, type AuditRow } from './lib/fecha-pago-mp.js'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const OUTPUT_DIR = path.join(__dirname, 'output')
 const DEFAULT_TXT_DIR = path.join(__dirname, '..', 'reportestxtcooperativa')
-const DEFAULT_AUDIT_JSON = path.join(
-  OUTPUT_DIR,
-  'audit-fecha-pago-2026-07-11T19-20-40-879Z.json',
-)
+const DEFAULT_AUDIT_JSON = path.join(OUTPUT_DIR, 'audit-fecha-pago-2026-07-11T19-20-40-879Z.json')
 
 type ReconcileStatus =
   | 'ok'
@@ -240,10 +237,7 @@ function buildMonthlySummary(
     (r) => r.nro_comprobante != null && r.status !== 'error_mp' && r.precio_final != null,
   )
 
-  const allMeses = new Set<string>([
-    ...txtIndex.mesesConTxt,
-    ...auditValid.map((r) => r.mes_mp),
-  ])
+  const allMeses = new Set<string>([...txtIndex.mesesConTxt, ...auditValid.map((r) => r.mes_mp)])
 
   const summaries: MonthlySummaryRow[] = []
 
@@ -341,9 +335,7 @@ function buildSobrefacturacionSummary(
     const importeDeclarado = roundPrecio(
       monthPair.comprobantes.reduce((sum, c) => sum + c.importe_total, 0),
     )
-    const importeCorrecto = roundPrecio(
-      auditEnMes.reduce((sum, r) => sum + r.precio_final!, 0),
-    )
+    const importeCorrecto = roundPrecio(auditEnMes.reduce((sum, r) => sum + r.precio_final!, 0))
     const ivaCorrecto = roundPrecio(
       auditEnMes.reduce((sum, r) => sum + calcIvaDesdePrecioFinal(r.precio_final!).iva, 0),
     )
@@ -397,8 +389,7 @@ function buildSobrefacturacionSummary(
   const totales: SobrefacturacionTotales = {
     ...totalesBase,
     iva_duplicados_extra: calcIvaDuplicadosExtra(txtIndex),
-    sobrefacturacion_neta_vs_mp:
-      totalesBase.delta_iva > 0.01 || totalesBase.delta_importe > 0.01,
+    sobrefacturacion_neta_vs_mp: totalesBase.delta_iva > 0.01 || totalesBase.delta_importe > 0.01,
   }
 
   rows.push({
@@ -410,7 +401,9 @@ function buildSobrefacturacionSummary(
   return { rows, totales }
 }
 
-function detectMissingTxtMonths(txtIndex: Awaited<ReturnType<typeof loadArcaTxtDirectory>>): string[] {
+function detectMissingTxtMonths(
+  txtIndex: Awaited<ReturnType<typeof loadArcaTxtDirectory>>,
+): string[] {
   const meses = [...txtIndex.mesesConTxt].sort()
   if (meses.length < 2) return []
 
@@ -638,7 +631,9 @@ async function main() {
   )
 
   if (duplicateAuditNros.length > 0) {
-    console.log(`\nADVERTENCIA: nro_comprobante duplicados en audit: ${duplicateAuditNros.join(', ')}`)
+    console.log(
+      `\nADVERTENCIA: nro_comprobante duplicados en audit: ${duplicateAuditNros.join(', ')}`,
+    )
   }
 
   console.log('\n--- Archivos ---')

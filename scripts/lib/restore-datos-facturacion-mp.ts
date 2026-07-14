@@ -17,8 +17,7 @@ export const KNOWN_WIPED_IDS = [
   '67ce4da3e6705fde98a8f258',
 ] as const
 
-export const DEFAULT_AUDIT_JSON =
-  'scripts/output/audit-fecha-pago-2026-07-13T15-29-32-693Z.json'
+export const DEFAULT_AUDIT_JSON = 'scripts/output/audit-fecha-pago-2026-07-13T15-29-32-693Z.json'
 
 export const MP_DELAY_MS = 150
 
@@ -95,17 +94,13 @@ function isPresent(value: unknown): boolean {
   return value !== null && value !== undefined && value !== ''
 }
 
-export function isDatosFacturacionIncomplete(
-  consumo: Pick<Consumo, 'datos_facturacion'>,
-): boolean {
+export function isDatosFacturacionIncomplete(consumo: Pick<Consumo, 'datos_facturacion'>): boolean {
   const df = consumo.datos_facturacion
   if (!df) return true
   return !isMercadoPagoPaymentId(df.id_pago_mp) || !isPresent(df.precio_final)
 }
 
-export function datosFacturacionKeys(
-  df: Consumo['datos_facturacion'] | null | undefined,
-): string {
+export function datosFacturacionKeys(df: Consumo['datos_facturacion'] | null | undefined): string {
   if (!df || typeof df !== 'object') return ''
   return Object.entries(df)
     .filter(([, v]) => isPresent(v))
@@ -169,9 +164,7 @@ export function extractPaymentRestoreFields(
   const metadata = (payment.metadata ?? {}) as Record<string, unknown>
   const metaConsumoId = metadata.consumo_id != null ? String(metadata.consumo_id) : null
   if (metaConsumoId && metaConsumoId !== consumoId) {
-    throw new Error(
-      `metadata.consumo_id mismatch: MP=${metaConsumoId} vs consumo=${consumoId}`,
-    )
+    throw new Error(`metadata.consumo_id mismatch: MP=${metaConsumoId} vs consumo=${consumoId}`)
   }
 
   const dateApproved = payment.date_approved
@@ -296,18 +289,11 @@ export async function buildRestoreRow(args: {
  * Merge payment fields into existing datos_facturacion without dropping tariff fields.
  * Writes the full merged group so Mongo/Payload never replaces with a partial object.
  */
-export async function applyRestoreRow(
-  payload: Payload,
-  row: RestoreRow,
-): Promise<void> {
+export async function applyRestoreRow(payload: Payload, row: RestoreRow): Promise<void> {
   if (row.status !== 'needs_restore') {
     throw new Error(`No se puede aplicar status=${row.status}`)
   }
-  if (
-    !row.id_pago_mp_restore ||
-    !row.fecha_pago_restore ||
-    row.precio_final_restore == null
-  ) {
+  if (!row.id_pago_mp_restore || !row.fecha_pago_restore || row.precio_final_restore == null) {
     throw new Error('Faltan campos restore para aplicar')
   }
 

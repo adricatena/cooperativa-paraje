@@ -83,7 +83,10 @@ function parseArgs(argv: string[]) {
 }
 
 function parseCsv(content: string): Record<string, string>[] {
-  const lines = content.replace(/^\uFEFF/, '').split(/\r?\n/).filter((l) => l.length > 0)
+  const lines = content
+    .replace(/^\uFEFF/, '')
+    .split(/\r?\n/)
+    .filter((l) => l.length > 0)
   if (lines.length < 2) return []
   const headers = parseCsvLine(lines[0])
   return lines.slice(1).map((line) => {
@@ -143,7 +146,9 @@ function clientKey(cuit: string, doc: string, apellido: string, nombre: string):
   return `nombre:${apellido}|${nombre}`
 }
 
-async function loadUsuariosByDoc(): Promise<Map<string, { nombre: string; apellido: string; cuit: string }>> {
+async function loadUsuariosByDoc(): Promise<
+  Map<string, { nombre: string; apellido: string; cuit: string }>
+> {
   const payload = await getPayload({ config })
   const { docs } = await payload.find({
     collection: 'usuarios',
@@ -334,7 +339,9 @@ async function main() {
   console.log('Resolviendo clientes...')
   const usuariosByDoc = await loadUsuariosByDoc()
   const clientesByNro = await loadClientesByNro(nrosDuplicados)
-  console.log(`Usuarios por DNI: ${usuariosByDoc.size}; nros duplicados resueltos: ${clientesByNro.size}`)
+  console.log(
+    `Usuarios por DNI: ${usuariosByDoc.size}; nros duplicados resueltos: ${clientesByNro.size}`,
+  )
 
   const extrasDup = extrasFromNroDuplicado(appearancesByNro, clientesByNro, usuariosByDoc)
   const extrasSin = linesFromSinConsumo(sinRows, usuariosByDoc)

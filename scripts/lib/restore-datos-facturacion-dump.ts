@@ -1,16 +1,13 @@
 import type { Consumo } from '@/payload-types'
-import { createRequire } from 'node:module'
 import { readFile } from 'node:fs/promises'
+import { createRequire } from 'node:module'
 import path from 'node:path'
 import type { Payload } from 'payload'
 import { datosFacturacionKeys } from './restore-datos-facturacion-mp.js'
 
 const require = createRequire(import.meta.url)
 const { deserialize } = require(
-  path.join(
-    process.cwd(),
-    'node_modules/.pnpm/bson@6.10.4/node_modules/bson/lib/bson.cjs',
-  ),
+  path.join(process.cwd(), 'node_modules/.pnpm/bson@6.10.4/node_modules/bson/lib/bson.cjs'),
 ) as {
   deserialize: (buffer: Buffer, options?: { promoteValues?: boolean }) => Record<string, unknown>
 }
@@ -142,19 +139,15 @@ function toIsoDate(value: unknown): string | null {
   return null
 }
 
-export function missingTariffFields(
-  df: Consumo['datos_facturacion'] | null | undefined,
-): string[] {
+export function missingTariffFields(df: Consumo['datos_facturacion'] | null | undefined): string[] {
   if (!df) return [...TARIFF_FIELDS]
   return TARIFF_FIELDS.filter((field) => {
     const v = df[field]
-    return v === null || v === undefined || v === ''
+    return v === null || v === undefined
   })
 }
 
-export function hasCompleteTariffs(
-  df: Consumo['datos_facturacion'] | null | undefined,
-): boolean {
+export function hasCompleteTariffs(df: Consumo['datos_facturacion'] | null | undefined): boolean {
   return missingTariffFields(df).length === 0
 }
 
@@ -196,8 +189,7 @@ export async function loadConsumosDump(
     map.set(id, {
       id,
       estado: typeof doc.estado === 'string' ? doc.estado : undefined,
-      nro_comprobante:
-        typeof doc.nro_comprobante === 'number' ? doc.nro_comprobante : null,
+      nro_comprobante: typeof doc.nro_comprobante === 'number' ? doc.nro_comprobante : null,
       precio_final: typeof doc.precio_final === 'number' ? doc.precio_final : null,
       datos_facturacion,
     })
@@ -315,10 +307,7 @@ export async function buildDumpRestoreRow(args: {
   }
 }
 
-export async function applyDumpRestoreRow(
-  payload: Payload,
-  row: DumpRestoreRow,
-): Promise<void> {
+export async function applyDumpRestoreRow(payload: Payload, row: DumpRestoreRow): Promise<void> {
   if (row.status !== 'needs_restore' || !row.merged) {
     throw new Error(`No se puede aplicar status=${row.status}`)
   }
@@ -337,7 +326,11 @@ export async function applyDumpRestoreRow(
 export async function applyDumpRestoreRows(
   payload: Payload,
   rows: DumpRestoreRow[],
-): Promise<{ applied: string[]; failed: Array<{ consumo_id: string; error: string }>; skipped: string[] }> {
+): Promise<{
+  applied: string[]
+  failed: Array<{ consumo_id: string; error: string }>
+  skipped: string[]
+}> {
   const applied: string[] = []
   const failed: Array<{ consumo_id: string; error: string }> = []
   const skipped: string[] = []
