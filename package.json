@@ -15,8 +15,15 @@
     "start": "cross-env NODE_OPTIONS=--no-deprecation next start",
     "audit:fecha-pago": "cross-env NODE_OPTIONS=--no-deprecation node --env-file=.env --import tsx scripts/audit-fecha-pago-mp.ts",
     "fix:fecha-pago": "cross-env NODE_OPTIONS=--no-deprecation node --env-file=.env --import tsx scripts/audit-fecha-pago-mp.ts --apply",
+    "audit:datos-facturacion": "cross-env NODE_OPTIONS=--no-deprecation node --env-file=.env --import tsx scripts/restore-datos-facturacion-mp.ts",
+    "fix:datos-facturacion": "cross-env NODE_OPTIONS=--no-deprecation node --env-file=.env --import tsx scripts/restore-datos-facturacion-mp.ts --apply",
+    "audit:datos-facturacion-dump": "cross-env NODE_OPTIONS=--no-deprecation node --env-file=.env --import tsx scripts/restore-datos-facturacion-dump.ts",
+    "fix:datos-facturacion-dump": "cross-env NODE_OPTIONS=--no-deprecation node --env-file=.env --import tsx scripts/restore-datos-facturacion-dump.ts --apply",
     "reporte:arca-txt": "cross-env NODE_OPTIONS=--no-deprecation node --import tsx scripts/reporte-arca-txt-vs-mp.ts",
-    "reporte:repeticiones-arca": "cross-env NODE_OPTIONS=--no-deprecation node --env-file=.env --import tsx scripts/reporte-repeticiones-arca.ts"
+    "reporte:repeticiones-arca": "cross-env NODE_OPTIONS=--no-deprecation node --env-file=.env --import tsx scripts/reporte-repeticiones-arca.ts",
+    "reporte:fantasmas-renumeracion": "cross-env NODE_OPTIONS=--no-deprecation node --env-file=.env --import tsx scripts/reporte-fantasmas-renumeracion.ts",
+    "reporte:arca-sin-consumo": "cross-env NODE_OPTIONS=--no-deprecation node --env-file=.env --import tsx scripts/reporte-arca-sin-consumo.ts",
+    "reporte:mediciones-a-favor": "cross-env NODE_OPTIONS=--no-deprecation node --env-file=.env --import tsx scripts/reporte-mediciones-a-favor.ts"
   },
   "dependencies": {
     "@payloadcms/db-mongodb": "3.70.0",

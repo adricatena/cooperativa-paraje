@@ -261,14 +261,24 @@ export async function applyFixes(payload: Payload, rows: AuditRow[]): Promise<Ap
 
   for (const row of toFix) {
     try {
+      // Merge sobre el grupo existente: NO pasar { datos_facturacion: { fecha_pago } }
+      // solo, porque Mongo/$set reemplaza todo el subdocumento y borra id_pago_mp, etc.
+      const consumo = await payload.findByID({
+        collection: 'consumos',
+        id: row.consumo_id,
+        depth: 0,
+      })
+      const mergedDatosFacturacion = {
+        ...(consumo.datos_facturacion ?? {}),
+        fecha_pago: row.fecha_aprobado_mp!,
+      }
+
       // db.updateOne evita revalidar relaciones (p. ej. medidor inactivo) al tocar solo fecha_pago
       await payload.db.updateOne({
         collection: 'consumos',
         id: row.consumo_id,
         data: {
-          datos_facturacion: {
-            fecha_pago: row.fecha_aprobado_mp!,
-          },
+          datos_facturacion: mergedDatosFacturacion,
           updatedAt: new Date().toISOString(),
         },
         returning: false,

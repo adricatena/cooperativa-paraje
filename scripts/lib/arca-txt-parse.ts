@@ -27,6 +27,8 @@ export type ArcaTxtComprobanteRow = {
   fecha_linea: string
   nro_comprobante: number
   importe_total: number
+  /** DNI/CUIT del comprador sin ceros a izquierda (desde TXT o CSV). */
+  doc_comprador: string
 }
 
 export type ArcaTxtAlicuotaRow = {
@@ -56,6 +58,7 @@ export type ArcaTxtAppearance = {
   importe_total: number
   neto: number
   iva: number
+  doc_comprador: string
 }
 
 export type ArcaTxtIndex = {
@@ -96,6 +99,22 @@ export function parseArcaMoney(value: string): number {
   const trimmed = value.trim().replace(/^"|"$/g, '')
   if (!trimmed) return 0
   return Number(trimmed.replace(/\./g, '').replace(',', '.'))
+}
+
+/** Normaliza documento a dígitos sin ceros a izquierda (para matchear DNI de CUIT). */
+export function normalizeDocComprador(value: string | number | null | undefined): string {
+  const digits = String(value ?? '').replace(/\D/g, '')
+  const trimmed = digits.replace(/^0+/, '')
+  return trimmed || '0'
+}
+
+/** Misma transformación que el export ARCA: CUIT → DNI (slice 2, -1). */
+export function dniFromCuit(cuit: string | number | null | undefined): string {
+  const digits = String(cuit ?? '').replace(/\D/g, '')
+  if (digits.length === 11) {
+    return normalizeDocComprador(digits.slice(2, -1))
+  }
+  return normalizeDocComprador(digits)
 }
 
 export function fechaCsvToLinea(fecha: string): string {
@@ -156,6 +175,7 @@ export function parseComprobantesLine(
 
   const fechaLinea = sliceField(line, 0, 8)
   const nroStr = sliceField(line, 16, 20)
+  const docStr = sliceField(line, 58, 20)
   const importeCent = sliceField(line, 108, 15)
 
   return {
@@ -164,6 +184,7 @@ export function parseComprobantesLine(
     fecha_linea: fechaLinea,
     nro_comprobante: Number(nroStr),
     importe_total: centavosToPesos(importeCent),
+    doc_comprador: normalizeDocComprador(docStr),
   }
 }
 
@@ -270,6 +291,7 @@ async function loadTxtMonthPair(
       importe_total: comp.importe_total,
       neto: alic.neto,
       iva: alic.iva,
+      doc_comprador: comp.doc_comprador,
     })
   }
 
@@ -301,6 +323,7 @@ export async function parseArcaCsvFile(
   const idxFecha = findColumnIndex(headers, ['fecha de emision'])
   const idxNro = findColumnIndex(headers, ['numero de comprobante'])
   const idxImporte = findColumnIndex(headers, ['importe total'])
+  const idxDoc = findColumnIndex(headers, ['nro. doc. comprador', 'nro doc comprador'])
   const idxIva21 = findColumnIndex(headers, ['importe iva 21%'])
   const idxTotalIva = findColumnIndex(headers, ['total iva'])
   const idxNeto21 = findColumnIndex(headers, ['neto gravado iva 21%'])
@@ -342,6 +365,7 @@ export async function parseArcaCsvFile(
       fecha_linea: fechaLinea,
       nro_comprobante: nro,
       importe_total: importeTotal,
+      doc_comprador: idxDoc >= 0 ? normalizeDocComprador(cols[idxDoc]) : '',
     })
 
     alicuotas.push({
@@ -440,6 +464,7 @@ export async function loadArcaTxtDirectory(txtDir: string): Promise<ArcaTxtIndex
         importe_total: comp.importe_total,
         neto: alic.neto,
         iva: alic.iva,
+        doc_comprador: comp.doc_comprador,
       })
     }
 

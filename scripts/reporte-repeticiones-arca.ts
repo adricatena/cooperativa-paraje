@@ -588,6 +588,7 @@ async function main() {
   for (const [key, filePath] of Object.entries(paths)) {
     console.log(`  ${key}: ${filePath}`)
   }
+  process.exit(0)
 }
 
 main().catch((error) => {
